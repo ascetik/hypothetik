@@ -11,6 +11,11 @@
             "Ascetik\\Mono\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Ascetik\\Mono\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "ascetik",
