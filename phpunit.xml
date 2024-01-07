@@ -8,7 +8,7 @@
 >
     <testsuites>
         <testsuite name="Storage Tests">
-            <file>tests/MapTest.php</file>
+            <file>tests/MaybeTest.php</file>
         </testsuite>
     </testsuites>
     <php>
