@@ -89,7 +89,7 @@ class NoneOptionTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('just a test');
         echo $this->maybe->either(strtoupper(...))
-            ->catch(new LogicException('just a test'))
+            ->orCatch(new LogicException('just a test'))
             ->value();
     }
 }

@@ -31,6 +31,7 @@ class SomeOptionTest extends TestCase
             ->then(fn (string $value) => $value . ' is awesome')
             ->then(strtoupper(...));
         $this->assertInstanceOf(Maybe::class, $uppercase);
+        // $this->assertFalse($this->maybe->equals($uppercase));
         $this->assertNotSame($this->maybe, $uppercase);
         $this->assertIsString($uppercase->value());
         $this->assertSame('PHP IS AWESOME', $uppercase->value());

@@ -14,22 +14,11 @@ class Either implements OptionnalValue
     private readonly array $arguments;
 
     private function __construct(
-        private Maybe $maybe,
-        private CallableType $call,
+        private readonly Maybe $maybe,
+        private readonly CallableType $call,
         mixed ...$arguments
     ) {
         $this->arguments = $arguments;
-    }
-
-    public function catch(Throwable $thrown): self
-    {
-        return self::use(
-            Maybe::none(),
-            function (Throwable $e) {
-                throw $e;
-            },
-            $thrown
-        );
     }
 
     public function or(callable $function, mixed ...$arguments): self
@@ -38,6 +27,17 @@ class Either implements OptionnalValue
             return self::use($this->maybe, $function, ...$arguments);
         }
         return $this;
+    }
+
+    public function orCatch(Throwable $thrown): self
+    {
+        return self::use(
+            Maybe::none(),
+            function (Throwable $e) {
+                throw $e;
+            },
+            $thrown
+        );
     }
 
     public function try(): Maybe
