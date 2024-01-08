@@ -74,7 +74,7 @@ class Maybe implements OptionnalValue
      * @template Generic
      * @param Generic $value
      *
-     * @return Maybe<Option<Generic>>
+     * @return Maybe<Generic>
      */
     public function then(callable $function): self
     {
@@ -85,7 +85,7 @@ class Maybe implements OptionnalValue
      * @template Generic
      * @param Generic $value
      *
-     * @return Maybe<Some<Generic>>
+     * @return Maybe<Generic>
      */
     public static function some(mixed $value): self
     {
@@ -95,7 +95,7 @@ class Maybe implements OptionnalValue
     /**
      * @template Generic
      *
-     * @return self<None>
+     * @return self<null>
      */
     public static function none(): self
     {
