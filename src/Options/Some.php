@@ -36,7 +36,13 @@ class Some implements Option
         return $this->value;
     }
 
-    public static function of(mixed $value)
+    /**
+     * @template Generic
+     * @param Generic $value
+     *
+     * @return Option<Generic>
+     */
+    public static function of(mixed $value): Option
     {
         if (is_null($value)) {
             return new None();

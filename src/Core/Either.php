@@ -6,9 +6,10 @@ namespace Ascetik\Mono\Core;
 
 use Ascetik\Callapsule\Factories\CallWrapper;
 use Ascetik\Callapsule\Types\CallableType;
+use Ascetik\Mono\Types\OptionnalValue;
 use Throwable;
 
-class Either
+class Either implements OptionnalValue
 {
     private readonly array $arguments;
 
@@ -20,23 +21,23 @@ class Either
         $this->arguments = $arguments;
     }
 
-    public function or(callable $function, mixed ...$arguments)
+    public function catch(Throwable $thrown): self
     {
-        if ($this->maybe->isNull()) {
-            return self::create($this->maybe, $function, ...$arguments);
-        }
-        return $this;
-    }
-
-    public function orThrow(Throwable $thrown)
-    {
-        return self::create(
+        return self::use(
             Maybe::none(),
             function (Throwable $e) {
                 throw $e;
             },
             $thrown
         );
+    }
+
+    public function or(callable $function, mixed ...$arguments): self
+    {
+        if ($this->maybe->isNull()) {
+            return self::use($this->maybe, $function, ...$arguments);
+        }
+        return $this;
     }
 
     public function try(): Maybe
@@ -49,7 +50,7 @@ class Either
         return $this->call->apply($this->arguments);
     }
 
-    public static function create(Maybe $maybe, callable $callable, mixed ...$arguments): self
+    public static function use(Maybe $maybe, callable $callable, mixed ...$arguments): self
     {
         return new self($maybe, CallWrapper::wrap($callable), ...$arguments);
     }

@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace Ascetik\Mono\Types;
 
-use Closure;
 
-interface Option
+interface Option extends OptionnalValue
 {
-    // public function map(Closure $function): self;
-    public function value(): mixed;
-    public function apply(callable $function):mixed;
+    public function apply(callable $function): mixed;
 }

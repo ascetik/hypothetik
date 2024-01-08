@@ -7,21 +7,21 @@ namespace Ascetik\Mono\Core;
 use Ascetik\Mono\Options\None;
 use Ascetik\Mono\Options\Some;
 use Ascetik\Mono\Types\Option;
+use Ascetik\Mono\Types\OptionnalValue;
 
 /**
  * @template Generic
  * @version 1.0.0
  */
-class Maybe
+class Maybe implements OptionnalValue
 {
     /**
-     * @param Option $option
+     * @param Option<Generic> $option
      */
     private function __construct(private Option $option)
     {
     }
 
-    // je récupère la valeur finale de ma fonction
     public function apply(callable $function): mixed
     {
         return $this->option->apply($function);
@@ -29,9 +29,15 @@ class Maybe
 
     public function either(callable $function): Either
     {
-        return Either::create($this, $function, $this->value());
+        return Either::use($this, $function, $this->value());
     }
 
+    /**
+     * @template Generic
+     * @param Generic $value
+     *
+     * @return self<Option<Generic>>
+     */
     public function otherwise(mixed $value): self
     {
         return is_null($this->value())
@@ -44,19 +50,15 @@ class Maybe
         return is_null($this->value());
     }
 
+    /**
+     * @return Generic
+     */
     public function value(): mixed
     {
         return $this->option->value();
     }
 
-
-    /**
-     * je récupère un Maybe du résultat de ma fonction
-     * flatMap c'est trop technique
-     *
-     * on cherche ici à modifier un Maybe à l'aide d'une fonction.
-     */
-    public function from(callable $function): self
+    public function then(callable $function): self
     {
         return self::of($this->apply($function));
     }

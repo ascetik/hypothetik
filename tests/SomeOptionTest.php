@@ -15,23 +15,35 @@ class SomeOptionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->maybe = Maybe::some('value');
+        $this->maybe = Maybe::some('php');
     }
 
-    public function testApplyingMutationWithSomeOption()
+    public function testApplyingCallableOnSomeOption()
     {
         $uppercase = $this->maybe->apply(strtoupper(...));
         $this->assertIsString($uppercase);
-        $this->assertSame('VALUE', $uppercase);
+        $this->assertSame('PHP', $uppercase);
     }
 
-    public function testShouldApplyChangesAndReturnValue()
+    public function testShouldApplyChangesOnNoneValue()
     {
-        $uppercase = $this->maybe->from(strtoupper(...));
+        $uppercase = $this->maybe
+            ->then(fn (string $value) => $value . ' is awesome')
+            ->then(strtoupper(...));
         $this->assertInstanceOf(Maybe::class, $uppercase);
         $this->assertNotSame($this->maybe, $uppercase);
         $this->assertIsString($uppercase->value());
-        $this->assertSame('VALUE', $uppercase->value());
+        $this->assertSame('PHP IS AWESOME', $uppercase->value());
+    }
+
+
+    public function testShouldDifferentiateAZeroFromANull()
+    {
+        $maybe = Maybe::of(0);
+        $result = $maybe->then(fn (int $n) => $n + 3 * 0);
+        $this->assertSame(0, $result->value());
+        $result = $result->then(fn (int $n) => $n - 2);
+        $this->assertSame(-2, $result->value());
     }
 
     public function testShouldNotUseDefaultValueOnSomeOption()
@@ -46,7 +58,7 @@ class SomeOptionTest extends TestCase
             ->or(fn (Throwable $thrown) => $thrown->getMessage());
 
         $this->assertInstanceOf(Either::class, $either);
-        $this->assertSame('VALUE', $either->value());
+        $this->assertSame('PHP', $either->value());
     }
 
 
@@ -56,7 +68,13 @@ class SomeOptionTest extends TestCase
             ->or(fn () => 'nothing')
             ->try();
         $this->assertInstanceOf(Maybe::class, $try);
-        $this->assertSame('VALUE', $try->value());
+        $this->assertSame('PHP', $try->value());
     }
 
+    public function testShouldHaveNoneOptionOnNull()
+    {
+        $falsySome = Maybe::some(null)->otherwise('nothing');
+        $this->assertInstanceOf(Maybe::class, $falsySome);
+        $this->assertSame('nothing', $falsySome->value());
+    }
 }

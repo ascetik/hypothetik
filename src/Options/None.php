@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Ascetik\Mono\Options;
 
 use Ascetik\Mono\Types\Option;
-use Closure;
 
 class None implements Option
 {
-    public function map(Closure $function): Option
+    public function apply(callable $function): null
     {
-        return $this;
+        return null;
     }
 
     public function value(): null
@@ -19,12 +18,4 @@ class None implements Option
         return null;
     }
 
-    public function apply(callable $function): mixed
-    {
-        return null;
-    }
-    // public function otherwise(mixed $value): Option
-    // {
-    //     return Maybe::of($value);
-    // }
 }
