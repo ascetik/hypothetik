@@ -41,6 +41,15 @@ class NoneOptionTest extends TestCase
         $this->assertSame('failed', $either->value());
     }
 
+    public function testEitherWithFalsyValueReturningMaybeWithNewResult()
+    {
+        $try = $this->maybe->either(strtoupper(...))
+            ->or(fn () => 'nothing')
+            ->try();
+        $this->assertInstanceOf(Maybe::class, $try);
+        $this->assertSame('nothing', $try->value());
+    }
+
     public function testEitherWithFalsyValueThrowingAnException()
     {
         $this->expectException(LogicException::class);
@@ -55,13 +64,13 @@ class NoneOptionTest extends TestCase
             ->value();
     }
 
-    public function testEitherWithFalsyValueReturningMaybeWithNewResult()
+    public function testEitherWithExceptionThrowShortCut()
     {
-        $try = $this->maybe->either(strtoupper(...))
-            ->or(fn () => 'nothing')
-            ->try();
-        $this->assertInstanceOf(Maybe::class, $try);
-        $this->assertSame('nothing', $try->value());
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('just a test');
+        echo $this->maybe->either(strtoupper(...))
+            ->orThrow(new LogicException('just a test'))
+            ->value();
     }
 
 }
