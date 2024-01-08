@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Ascetik\Mono\Core;
 
+use Ascetik\Mono\Options\None;
+use Ascetik\Mono\Options\Some;
 use Ascetik\Mono\Types\Option;
-use Closure;
-use Throwable;
 
 /**
  * @template Generic
@@ -71,9 +71,6 @@ class Maybe
         return new self(new None());
     }
 
-    /**
-     * @return self
-     */
     public static function of(mixed $value): self
     {
         return is_null($value)
