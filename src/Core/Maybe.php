@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ascetik\Mono\Core;
 
+use Ascetik\Mono\Types\Option;
 use Closure;
 use Throwable;
 
@@ -14,81 +15,69 @@ use Throwable;
 class Maybe
 {
     /**
-     * @var Generic $value
+     * @param Option $option
      */
-    public readonly mixed $value;
-    private mixed $default = null;
+    private function __construct(private Option $option)
+    {
+    }
+
+    // je récupère la valeur finale de ma fonction
+    public function apply(callable $function): mixed
+    {
+        return $this->option->apply($function);
+    }
+
+    public function either(callable $function): Either
+    {
+        return Either::create($this, $function, $this->value());
+    }
+
+    public function otherwise(mixed $value): self
+    {
+        return is_null($this->value())
+            ? self::some($value)
+            : $this;
+    }
+
+    public function isNull(): bool
+    {
+        return is_null($this->value());
+    }
+
+    public function value(): mixed
+    {
+        return $this->option->value();
+    }
+
 
     /**
-     * @param Generic $value
-     */
-    private function __construct(mixed $value)
-    {
-        $this->value = $value;
-    }
-
-    public function map(Closure $function): self
-    {
-        $value = $this->value ?? $this->default;
-        return is_null($value)
-            ? $this
-            : new self(call_user_func($function, $this->value));
-    }
-
-    // public function default(mixed $value):self
-    // {
-    //     $this->default = $value;
-    //     return $this;
-    // }
-    public function getValue(): mixed
-    {
-        return $this->value;
-    }
-
-    /**
-     * @template Generic
-     * @param Generic $default
+     * je récupère un Maybe du résultat de ma fonction
+     * flatMap c'est trop technique
      *
-     * @return Generic
+     * on cherche ici à modifier un Maybe à l'aide d'une fonction.
      */
-    public function valueOrDefault(mixed $default): mixed
+    public function from(callable $function): self
     {
-        if (!is_null($this->value)) {
-            /** @var Generic */
-            return $this->value;
-        }
-        return $default;
-    }
-
-    public function doOrDie(Closure $success, Closure $failure)
-    {
-        try {
-            return call_user_func($success, $this->value);
-        } catch (Throwable $e) {
-            return  call_user_func($failure, $e);
-        }
-    }
-
-    public function valueOr(Closure $otherwise): mixed
-    {
-        try {
-            return $this->value;
-        } catch (Throwable $e) {
-            echo 'catching' . PHP_EOL;
-            echo $e->getMessage() . PHP_EOL;
-            $result =  call_user_func($otherwise, $e);
-        }
-        echo $result . PHP_EOL;
-        return $result;
+        return self::of($this->apply($function));
     }
 
     public static function some(mixed $value): self
     {
-        return new self($value);
+        return new self(Some::of($value));
     }
 
     public static function none(): self
     {
-        return new self(null);
+        return new self(new None());
+    }
+
+    /**
+     * @return self
+     */
+    public static function of(mixed $value): self
+    {
+        return is_null($value)
+            ? self::none()
+            : self::some($value);
     }
 }
