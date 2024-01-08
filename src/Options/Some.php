@@ -6,6 +6,7 @@ namespace Ascetik\Mono\Options;
 
 use Closure;
 use Ascetik\Mono\Types\Option;
+use Ascetik\Mono\Types\OptionnalValue;
 
 /**
  * @template Generic
@@ -28,6 +29,10 @@ class Some implements Option
         return call_user_func($function, $this->value);
     }
 
+    public function equals(Option $option): bool
+    {
+        return $this->value === $option->value;
+    }
     /**
      * @return Generic
      */

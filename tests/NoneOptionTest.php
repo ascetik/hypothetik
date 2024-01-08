@@ -32,23 +32,15 @@ class NoneOptionTest extends TestCase
             ->otherwise('php')
             ->then(fn (string $value) => $value . ' is awesome');
         $this->assertInstanceOf(Maybe::class, $uppercase);
-        $this->assertNotSame($this->maybe, $uppercase);
+        $this->assertFalse($this->maybe->equals($uppercase));
         $this->assertIsString($uppercase->value());
         $this->assertSame('php is awesome', $uppercase->value());
-    }
-
-
-    public function testShouldUseDefaultOnNullOption()
-    {
-        $otherwise = $this->maybe->otherwise('other value');
-        $this->assertNotSame($otherwise, $this->maybe);
-        $this->assertSame('other value', $otherwise->value());
     }
 
     public function testShouldUseDefaultValueOnNoneOption()
     {
         $otherwise = $this->maybe->otherwise('other value');
-        $this->assertNotSame($this->maybe, $otherwise);
+        $this->assertFalse($this->maybe->equals($otherwise));
         $this->assertSame('other value', $otherwise->value());
     }
 

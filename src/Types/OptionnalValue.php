@@ -7,4 +7,5 @@ namespace Ascetik\Mono\Types;
 interface OptionnalValue
 {
     public function value(): mixed;
+
 }

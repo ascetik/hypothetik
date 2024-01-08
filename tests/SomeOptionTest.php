@@ -15,7 +15,8 @@ class SomeOptionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->maybe = Maybe::some('php');
+        $maybe = Maybe::some('php');
+        $this->maybe = $maybe;
     }
 
     public function testApplyingCallableOnSomeOption()
@@ -31,9 +32,9 @@ class SomeOptionTest extends TestCase
             ->then(fn (string $value) => $value . ' is awesome')
             ->then(strtoupper(...));
         $this->assertInstanceOf(Maybe::class, $uppercase);
-        // $this->assertFalse($this->maybe->equals($uppercase));
-        $this->assertNotSame($this->maybe, $uppercase);
-        $this->assertIsString($uppercase->value());
+        $this->assertFalse($this->maybe->equals($uppercase));
+        $value = $uppercase->value();
+        $this->assertIsString($value);
         $this->assertSame('PHP IS AWESOME', $uppercase->value());
     }
 
