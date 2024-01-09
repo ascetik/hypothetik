@@ -84,4 +84,14 @@ class NoneOptionTest extends TestCase
             ->orCatch(new LogicException('just a test'))
             ->value();
     }
+
+    public function testShouldNotApplyChangesOnNoneValueWithoutDefault()
+    {
+        $uppercase = $this->maybe
+            ->then(strtoupper(...))
+            ->then(fn (string $value) => $value . ' is awesome');
+        $this->assertInstanceOf(Maybe::class, $uppercase);
+        $this->assertTrue($this->maybe->equals($uppercase));
+        $this->assertNull($uppercase->value());
+    }
 }
