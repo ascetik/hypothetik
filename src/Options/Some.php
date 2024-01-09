@@ -38,7 +38,6 @@ final class Some implements Option
     public function apply(CallStrategy $runner, callable $function): mixed
     {
         return $runner->call($function, [$this->value]);
-        // return call_user_func($function, $this->value);
     }
 
     public function equals(Option $option): bool

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ascetik\Mono\Values;
+namespace Ascetik\Mono\Transfer;
 
 use Ascetik\Callapsule\Factories\CallWrapper;
 use Ascetik\Callapsule\Types\CallableType;
@@ -11,8 +11,8 @@ use Ascetik\Mono\Types\CallStrategy;
 class EitherCall
 {
     public function __construct(
-        public readonly CallStrategy $runner,
-        public readonly CallableType $call
+        private CallStrategy $runner,
+        private CallableType $call
     ) {
     }
 

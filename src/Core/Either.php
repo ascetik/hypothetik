@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Ascetik\Mono\Core;
 
-use Ascetik\Mono\Values\EitherCall;
+use Ascetik\Mono\Transfer\EitherCall;
 use Throwable;
 
 /**

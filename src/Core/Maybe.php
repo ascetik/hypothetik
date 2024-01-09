@@ -17,10 +17,10 @@ namespace Ascetik\Mono\Core;
 use Ascetik\Mono\Options\None;
 use Ascetik\Mono\Options\Some;
 use Ascetik\Mono\Types\Option;
+use Ascetik\Mono\Types\CallStrategy;
+use Ascetik\Mono\Transfer\EitherCall;
 use Ascetik\Callapsule\Types\CallableType;
 use Ascetik\Mono\Transfer\MainCallStrategy;
-use Ascetik\Mono\Types\CallStrategy;
-use Ascetik\Mono\Values\EitherCall;
 
 /**
  * Library Core
