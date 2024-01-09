@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * This is part of the ascetik/mono package
+ *
+ * @package    Mono\Core
+ * @category   Core
+ * @license    https://opensource.org/license/mit/  MIT License
+ * @copyright  Copyright (c) 2023, Vidda
+ * @author     Vidda <vidda@ascetik.fr>
+ */
+
 declare(strict_types=1);
 
 namespace Ascetik\Mono\Core;
@@ -11,6 +21,11 @@ use Ascetik\Mono\Types\OptionnalValue;
 use Ascetik\Callapsule\Types\CallableType;
 
 /**
+ * Library Core
+ *
+ * Hold an optionnal value in order
+ * to avoid checks on an eventually null value.
+ *
  * @template Generic
  * @version 1.0.0
  */
@@ -23,12 +38,25 @@ class Maybe implements OptionnalValue
     {
     }
 
+    /**
+     * Return a new value derived
+     * from given function
+     *
+     * @param callable $function
+     *
+     * @return mixed
+     */
     public function apply(callable $function): mixed
     {
         return $this->option->apply($function);
     }
 
     /**
+     * Register given function to
+     * execute on a truthy Maybe.
+     * The falsy Maybe function registration
+     * is provided by the returned Either instance.
+     *
      * @param callable $function
      *
      * @return Either<Maybe,CallableType,array>
@@ -44,6 +72,9 @@ class Maybe implements OptionnalValue
     }
 
     /**
+     * Provide an alternative for
+     * a null value replacement
+     *
      * @template Generic
      * @param Generic $value
      *
@@ -71,6 +102,11 @@ class Maybe implements OptionnalValue
     }
 
     /**
+     * Register a function to execute
+     * when Option value is not null,
+     * returning a new Maybe with
+     * function return as Option
+     *
      * @template Generic
      * @param Generic $value
      *
