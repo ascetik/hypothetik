@@ -27,7 +27,7 @@ use Ascetik\Callapsule\Types\CallableType;
  * to avoid checks on an eventually null value.
  *
  * @template Generic
- * @version 1.0.0
+ * @version 0.1.0 (draft)
  */
 class Maybe implements OptionnalValue
 {
