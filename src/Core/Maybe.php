@@ -29,7 +29,7 @@ use Ascetik\Callapsule\Types\CallableType;
  * @template Generic
  * @version 0.1.0 (draft)
  */
-class Maybe implements OptionnalValue
+class Maybe
 {
     /**
      * @param Option<Generic> $option
@@ -66,7 +66,7 @@ class Maybe implements OptionnalValue
         return Either::use($this, $function, $this->value());
     }
 
-    public function equals(OptionnalValue $value): bool
+    public function equals(self $value): bool
     {
         return $this->option->equals($value->option);
     }

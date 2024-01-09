@@ -16,7 +16,6 @@ namespace Ascetik\Mono\Core;
 
 use Ascetik\Callapsule\Factories\CallWrapper;
 use Ascetik\Callapsule\Types\CallableType;
-use Ascetik\Mono\Types\OptionnalValue;
 use Throwable;
 
 /**
@@ -26,7 +25,7 @@ use Throwable;
  *
  * @version 1.0.0
  */
-class Either implements OptionnalValue
+class Either
 {
     private readonly array $arguments;
 
