@@ -18,6 +18,8 @@ use Ascetik\Mono\Options\None;
 use Ascetik\Mono\Options\Some;
 use Ascetik\Mono\Types\Option;
 use Ascetik\Callapsule\Types\CallableType;
+use Ascetik\Mono\Transfer\MainCallStrategy;
+use Ascetik\Mono\Types\CallStrategy;
 
 /**
  * Library Core
@@ -33,8 +35,10 @@ final class Maybe
     /**
      * @param Option<Generic> $option
      */
-    private function __construct(private Option $option)
-    {
+    private function __construct(
+        private Option $option,
+        private CallStrategy $runner = new MainCallStrategy()
+    ) {
     }
 
     /**
@@ -47,7 +51,7 @@ final class Maybe
      */
     public function apply(callable $function): mixed
     {
-        return $this->option->apply($function);
+        return $this->option->apply($this->runner, $function);
     }
 
     /**
