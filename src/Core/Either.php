@@ -14,8 +14,7 @@ declare(strict_types=1);
 
 namespace Ascetik\Mono\Core;
 
-use Ascetik\Callapsule\Factories\CallWrapper;
-use Ascetik\Callapsule\Types\CallableType;
+use Ascetik\Mono\Values\EitherCall;
 use Throwable;
 
 /**
@@ -31,7 +30,7 @@ final class Either
 
     private function __construct(
         private readonly Maybe $maybe,
-        private readonly CallableType $call,
+        private readonly EitherCall $call,
         mixed ...$arguments
     ) {
         $this->arguments = $arguments;
@@ -49,7 +48,7 @@ final class Either
     public function or(callable $function, mixed ...$arguments): self
     {
         if ($this->maybe->isNull()) {
-            return self::use($this->maybe, $function, ...$arguments);
+            return self::use($this->maybe, $this->call->with($function), ...$arguments);
         }
         return $this;
     }
@@ -66,9 +65,11 @@ final class Either
     {
         return self::use(
             Maybe::not(),
-            function (Throwable $e) {
-                throw $e;
-            },
+            $this->call->with(
+                function (Throwable $e) {
+                    throw $e;
+                }
+            ),
             $thrown
         );
     }
@@ -93,11 +94,12 @@ final class Either
      */
     public function value(): mixed
     {
-        return $this->call->apply($this->arguments);
+        return $this->call->run($this->arguments);
     }
 
-    public static function use(Maybe $maybe, callable $callable, mixed ...$arguments): self
+    public static function use(Maybe $maybe, EitherCall $call, mixed ...$arguments): self
     {
-        return new self($maybe, CallWrapper::wrap($callable), ...$arguments);
+
+        return new self($maybe, $call, ...$arguments);
     }
 }

@@ -20,6 +20,7 @@ use Ascetik\Mono\Types\Option;
 use Ascetik\Callapsule\Types\CallableType;
 use Ascetik\Mono\Transfer\MainCallStrategy;
 use Ascetik\Mono\Types\CallStrategy;
+use Ascetik\Mono\Values\EitherCall;
 
 /**
  * Library Core
@@ -66,7 +67,7 @@ final class Maybe
      */
     public function either(callable $function): Either
     {
-        return Either::use($this, $function, $this->value());
+        return Either::use($this, EitherCall::create($this->runner, $function), $this->value());
     }
 
     public function equals(self $value): bool
