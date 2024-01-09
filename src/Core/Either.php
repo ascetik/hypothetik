@@ -25,7 +25,7 @@ use Throwable;
  *
  * @version 1.0.0
  */
-class Either
+final class Either
 {
     private readonly array $arguments;
 
@@ -62,7 +62,7 @@ class Either
      *
      * @return self
      */
-    public function orCatch(Throwable $thrown): self
+    public function orThrow(Throwable $thrown): self
     {
         return self::use(
             Maybe::not(),

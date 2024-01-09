@@ -21,7 +21,7 @@ use Ascetik\Mono\Types\Option;
  *
  * @version 1.0.0
  */
-class None implements Option
+final class None implements Option
 {
     public function apply(callable $function): null
     {

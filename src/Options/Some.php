@@ -23,7 +23,7 @@ use Ascetik\Mono\Types\Option;
  *
  * @version 1.0.0
  */
-class Some implements Option
+final class Some implements Option
 {
     /**
      * @template Generic

@@ -17,7 +17,6 @@ namespace Ascetik\Mono\Core;
 use Ascetik\Mono\Options\None;
 use Ascetik\Mono\Options\Some;
 use Ascetik\Mono\Types\Option;
-use Ascetik\Mono\Types\OptionnalValue;
 use Ascetik\Callapsule\Types\CallableType;
 
 /**
@@ -29,7 +28,7 @@ use Ascetik\Callapsule\Types\CallableType;
  * @template Generic
  * @version 0.1.0 (draft)
  */
-class Maybe
+final class Maybe
 {
     /**
      * @param Option<Generic> $option
@@ -119,24 +118,29 @@ class Maybe
 
     /**
      * @template Generic
-     * @param Generic $value
-     *
-     * @return Maybe<Generic>
-     */
-    public static function some(mixed $value): self
-    {
-        return !is_null($value)
-            ? new self(Some::of($value))
-            : self::not();
-    }
-
-    /**
-     * @template Generic
      *
      * @return self<null>
      */
     public static function not(): self
     {
         return new self(new None());
+    }
+
+    public static function of(Option $option): self
+    {
+        return !is_null($option->value())
+            ? new self($option)
+            : self::not();
+    }
+
+    /**
+     * @template Generic
+     * @param Generic $value
+     *
+     * @return Maybe<Generic>
+     */
+    public static function some(mixed $value): self
+    {
+        return self::of(Some::of($value));
     }
 }
