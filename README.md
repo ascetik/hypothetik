@@ -21,5 +21,14 @@ Cette implémentation maison de **Maybe** ne propose rien de plus que la gestion
 
 > V 0.1.0 : draft version
 
-Version certainement incomplète.
-T.D.D. built, concept très utile, comme bien des fois...
+- T.D.D. built, Version certainement incomplète.
+- méthodes **Maybe**
+    - apply(_callable_): _mixed_ : renvoie le résultat de la fonction donnée
+    - either(_callable_): _Either_ : renvoie une instance de Either contenant la fonction donnée
+    - equals(_Maybe_): _bool_         : vérifie l'égalité des valeurs contenues dans un autre **Maybe**
+    - isNull(): bool            : vérifie si la valeur courante est nulle
+    - otherwise(_mixed_): Maybe     : renvoie un nouveau Maybe si l'instance courante a une valeur nulle
+    - then(_callable_): _Maybe_  : renvoie le résultat de la fonction donnée dans un nouveau Maybe
+    - value(): _mixed_              : retourne la valeur contenue par le Maybe
+- méthodes **Either**
+
