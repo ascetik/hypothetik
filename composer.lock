@@ -4,8 +4,49 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0c6f60892a0cf46b9bf54844894baf11",
-    "packages": [],
+    "content-hash": "e8bb7c2c4c390bf763e5561956d95f8c",
+    "packages": [
+        {
+            "name": "ascetik/callapsule",
+            "version": "v0.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ascetik/callapsule.git",
+                "reference": "a067df80ea4d425e78a45b6de85f845eac2b98af"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ascetik/callapsule/zipball/a067df80ea4d425e78a45b6de85f845eac2b98af",
+                "reference": "a067df80ea4d425e78a45b6de85f845eac2b98af",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^10.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ascetik\\Callapsule\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "ascetik",
+                    "email": "ascetik@free.fr"
+                }
+            ],
+            "description": "A way to encapsulate callables",
+            "support": {
+                "issues": "https://github.com/ascetik/callapsule/issues",
+                "source": "https://github.com/ascetik/callapsule/tree/v0.4.0"
+            },
+            "time": "2023-11-16T18:22:28+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "myclabs/deep-copy",
