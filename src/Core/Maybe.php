@@ -114,7 +114,7 @@ class Maybe
      */
     public function then(callable $function): self
     {
-        return self::of($this->apply($function));
+        return self::some($this->apply($function));
     }
 
     /**
@@ -125,7 +125,9 @@ class Maybe
      */
     public static function some(mixed $value): self
     {
-        return new self(Some::of($value));
+        return !is_null($value)
+            ? new self(Some::of($value))
+            : self::not();
     }
 
     /**
@@ -136,19 +138,5 @@ class Maybe
     public static function not(): self
     {
         return new self(new None());
-    }
-
-    /**
-     * @template Generic
-     *
-     * @param Generic $value
-     *
-     * @return self<Option<Generic>>
-     */
-    public static function of(mixed $value): self
-    {
-        return !is_null($value)
-            ? self::some($value)
-            : self::not();
     }
 }

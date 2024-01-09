@@ -82,7 +82,7 @@ class Either
      */
     public function try(): Maybe
     {
-        return Maybe::of($this->value());
+        return Maybe::some($this->value());
     }
 
     /**

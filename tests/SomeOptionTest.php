@@ -41,7 +41,7 @@ class SomeOptionTest extends TestCase
 
     public function testShouldDifferentiateAZeroFromANull()
     {
-        $maybe = Maybe::of(0);
+        $maybe = Maybe::some(0);
         $result = $maybe->then(fn (int $n) => $n + 3 * 0);
         $this->assertSame(0, $result->value());
         $result = $result->then(fn (int $n) => $n - 2);
