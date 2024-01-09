@@ -17,7 +17,7 @@ namespace Ascetik\Mono\Core;
 use Ascetik\Mono\Options\None;
 use Ascetik\Mono\Options\Some;
 use Ascetik\Mono\Types\Option;
-use Ascetik\Mono\Types\CallStrategy;
+use Ascetik\Mono\Types\CallableRunningStrategy;
 use Ascetik\Mono\Transfer\EitherCall;
 use Ascetik\Callapsule\Types\CallableType;
 use Ascetik\Mono\Transfer\MainCallStrategy;
@@ -38,7 +38,7 @@ final class Maybe
      */
     private function __construct(
         private Option $option,
-        private CallStrategy $runner = new MainCallStrategy()
+        private CallableRunningStrategy $runner = new MainCallStrategy()
     ) {
     }
 

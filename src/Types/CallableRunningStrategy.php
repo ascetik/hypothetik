@@ -15,13 +15,12 @@ declare(strict_types=1);
 namespace Ascetik\Mono\Types;
 
 /**
- * Describe the behavior of a Maybe Option
+ * Describe the behavior of an instance
+ * responsible for callable execution
  *
  * @version 1.0.0
  */
-interface Option
+interface CallableRunningStrategy
 {
-    public function apply(CallableRunningStrategy $runner, callable $function): mixed;
-    public function equals(self $option): bool;
-    public function value(): mixed;
+    public function call(callable $call, array $arguments = []): mixed;
 }
