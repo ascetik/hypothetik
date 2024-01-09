@@ -65,7 +65,7 @@ class Either
     public function orCatch(Throwable $thrown): self
     {
         return self::use(
-            Maybe::none(),
+            Maybe::not(),
             function (Throwable $e) {
                 throw $e;
             },

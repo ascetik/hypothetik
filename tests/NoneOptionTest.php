@@ -16,7 +16,7 @@ class NoneOptionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->maybe = Maybe::none();
+        $this->maybe = Maybe::not();
     }
 
     public function testTryingToApplyCallableOnNoneOption()

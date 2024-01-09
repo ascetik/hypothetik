@@ -71,6 +71,11 @@ class Maybe
         return $this->option->equals($value->option);
     }
 
+    public function isNull(): bool
+    {
+        return is_null($this->value());
+    }
+
     /**
      * Provide an alternative for
      * a null value replacement
@@ -85,11 +90,6 @@ class Maybe
         return is_null($this->value())
             ? self::some($value)
             : $this;
-    }
-
-    public function isNull(): bool
-    {
-        return is_null($this->value());
     }
 
     /**
@@ -133,7 +133,7 @@ class Maybe
      *
      * @return self<null>
      */
-    public static function none(): self
+    public static function not(): self
     {
         return new self(new None());
     }
@@ -147,8 +147,8 @@ class Maybe
      */
     public static function of(mixed $value): self
     {
-        return is_null($value)
-            ? self::none()
-            : self::some($value);
+        return !is_null($value)
+            ? self::some($value)
+            : self::not();
     }
 }
