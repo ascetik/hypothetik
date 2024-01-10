@@ -17,10 +17,7 @@ namespace Ascetik\Mono\Core;
 use Ascetik\Mono\Options\None;
 use Ascetik\Mono\Options\Some;
 use Ascetik\Mono\Types\Option;
-use Ascetik\Mono\Types\CallableRunningStrategy;
-use Ascetik\Mono\Transfer\EitherCall;
 use Ascetik\Callapsule\Types\CallableType;
-use Ascetik\Mono\Transfer\MainCallStrategy;
 
 /**
  * Library Core
@@ -36,10 +33,8 @@ final class Maybe
     /**
      * @param Option<Generic> $option
      */
-    private function __construct(
-        private Option $option,
-        private CallableRunningStrategy $runner = new MainCallStrategy()
-    ) {
+    private function __construct(private Option $option)
+    {
     }
 
     /**
@@ -52,7 +47,7 @@ final class Maybe
      */
     public function apply(callable $function): mixed
     {
-        return $this->option->apply($this->runner, $function);
+        return $this->option->apply($function);
     }
 
     /**
@@ -67,7 +62,7 @@ final class Maybe
      */
     public function either(callable $function): Either
     {
-        return Either::use($this, EitherCall::create($this->runner, $function), $this->value());
+        return Either::use($this, $function, $this->value());
     }
 
     public function equals(self $value): bool

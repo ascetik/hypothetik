@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Ascetik\Mono\Options;
 
-use Ascetik\Mono\Types\CallableRunningStrategy;
 use Ascetik\Mono\Types\Option;
 
 /**
@@ -24,7 +23,7 @@ use Ascetik\Mono\Types\Option;
  */
 final class None implements Option
 {
-    public function apply(CallableRunningStrategy $runner, callable $function): null
+    public function apply(callable $function): null
     {
         return null;
     }
