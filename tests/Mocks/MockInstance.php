@@ -10,7 +10,7 @@ class MockInstance
     {
     }
 
-    public function concat(string $add)
+    public function concat(string $add):self
     {
         $this->value .= ' ' . $add;
         return $this;

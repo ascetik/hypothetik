@@ -78,4 +78,12 @@ class SomeOptionTest extends TestCase
         $this->assertInstanceOf(Maybe::class, $falsySome);
         $this->assertSame('nothing', $falsySome->value());
     }
+
+    public function testShouldNowAcceptMoreArgumentsInApplyCallable()
+    {
+        $uppercase = $this->maybe
+            ->then(fn (string $value, string $add) => $value . ' ' . $add, 'is awesome')
+            ->then(strtoupper(...));
+        $this->assertSame('PHP IS AWESOME', $uppercase->value());
+    }
 }

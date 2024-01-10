@@ -10,4 +10,9 @@ class MockInstanceService
     {
         return $instance->getValue();
     }
+
+    public function add(MockInstance $instance)
+    {
+        return $instance->concat('handled by InstanceService');
+    }
 }
