@@ -10,6 +10,7 @@
         <testsuite name="Storage Tests">
             <file>tests/SomeOptionTest.php</file>
             <file>tests/NoneOptionTest.php</file>
+            <file>tests/SomeInstanceTest.php</file>
         </testsuite>
     </testsuites>
     <php>

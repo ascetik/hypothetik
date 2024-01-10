@@ -38,7 +38,6 @@ class SomeOptionTest extends TestCase
         $this->assertSame('PHP IS AWESOME', $uppercase->value());
     }
 
-
     public function testShouldDifferentiateAZeroFromANull()
     {
         $maybe = Maybe::some(0);
