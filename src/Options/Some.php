@@ -34,9 +34,9 @@ final class Some implements Option
     {
     }
 
-    public function apply(callable $function): mixed
+    public function apply(callable $function, array $arguments = []): mixed
     {
-        return call_user_func($function, $this->value);
+        return call_user_func_array($function, [$this->value, ...$arguments]);
     }
 
     public function equals(Option $option): bool
