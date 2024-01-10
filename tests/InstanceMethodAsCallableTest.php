@@ -46,4 +46,11 @@ class InstanceMethodAsCallableTest extends TestCase
         $this->assertInstanceOf(MockInstance::class, $result);
         $this->assertSame('test handled by InvokableInstanceMutator', $result->getValue());
     }
+
+    public function testSHouldApplyAFUnctionUsingArguments()
+    {
+        $result = $this->maybe->apply($this->service->append(...),'from outside');
+        $this->assertInstanceOf(MockInstance::class, $result);
+        $this->assertSame('test handled from outside', $result->getValue());
+    }
 }

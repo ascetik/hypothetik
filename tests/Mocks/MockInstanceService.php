@@ -15,4 +15,10 @@ class MockInstanceService
     {
         return $instance->concat('handled by InstanceService');
     }
+
+    public function append(MockInstance $instance, string $add)
+    {
+        return $instance->concat('handled '.$add);
+
+    }
 }

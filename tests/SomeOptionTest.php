@@ -86,4 +86,29 @@ class SomeOptionTest extends TestCase
             ->then(strtoupper(...));
         $this->assertSame('PHP IS AWESOME', $uppercase->value());
     }
+
+    public function testMaybeCannotHoldAnotherMaybe()
+    {
+        $otherMaybe = Maybe::some($this->maybe);
+        $this->assertIsString($otherMaybe->value());
+        $this->assertSame('php', $otherMaybe->value());
+    }
+
+    public function testASomeInstanceCannotHoldAnotherOption()
+    {
+        $otherMaybe = Maybe::some(Maybe::some('other'));
+        $this->assertIsString($otherMaybe->value());
+    }
+
+    public function testASomeInstanceCannotHoldANoneOption()
+    {
+        $otherMaybe = Maybe::some(Maybe::not());
+        $this->assertNull($otherMaybe->value());
+    }
+
+    public function testMaybeContainingAClosure()
+    {
+        $maybe = Maybe::some(fn (string $subject) => 'test for ' . $subject);
+        $this->assertSame('test for closure', call_user_func($maybe->value(), 'closure'));
+    }
 }
