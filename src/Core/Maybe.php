@@ -141,6 +141,10 @@ final class Maybe
      */
     public static function some(mixed $value): self
     {
+        if($value instanceof self)
+        {
+            return $value;
+        }
         return self::of(Some::of($value));
     }
 }
