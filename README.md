@@ -17,12 +17,12 @@ T.D.D. built
 
 The **Maybe** class is the main tool of this package. It handles an **Option** which may contain a value and drives different operations on this value.
 
-**Maybe**::apply(_callable_): _mixed_ : return the result of given function
+**Maybe**::apply(_callable_, _...mixed_): _mixed_ : return the result of given function
 **Maybe**::either(_callable_): _Either_ : return an instance of **Either**.
 **Maybe**::equals(_Maybe_): _bool_ : check equality with another **Maybe** instance.
 **Maybe**::isNull(): bool : check if value is null
 **Maybe**::otherwise(_mixed_): Maybe : return a new instance when Option value is null
-**Maybe**::then(_callable_): _Maybe_ : return a new instance with the result of given function
+**Maybe**::then(_callable_, _...mixed_): _Maybe_ : return a new instance with the result of given function
 **Maybe**::value(): _mixed_ : Return raw **Option** value
 **Maybe**::static not(): Maybe : return a **Maybe** instance with null
 **Maybe**::static of(_Option_): Maybe : return a **Maybe** instance with given option
@@ -77,14 +77,30 @@ les méthodes some() et of() vérifient le contenu proposé. Si ce dernier est n
 Pour récupérer les données, en reprenant l'instance "$some" de l'exemple précédent :
 
 ```php
-echo $some->value(); // affiche "my value"
+echo $some->value(); // "my value"
 
 ```
 
-Pour transformer une valeur et retourner son résultat :
+To return the result of a function, using the Option value as parameter :
 
 ```php
-echo $some->apply(uppercase(...)); // affiche "MY VALUE"
+
+echo $some->apply(uppercase(...)); // "MY VALUE"
+
+```
+
+It is possible to add arguments, separated by comas.
+In this case, there are two restrictions :
+- The Option value MUST be the first parameter of the function.
+- The order of the arguments must match with the other function parameters.
+
+```php
+
+$pathToAboutPage = Maybe::some('/about');
+echo $pathToAboutPage->apply(trim(...), '/'); // "about", without forward slash
+
+$function = fn(string $value, string $separator, string $add)=> trim($value, $separator).'-'.$add
+echo $pathToAboutPage->apply($function, '/','page' ); //"about-page"
 
 ```
 
@@ -104,6 +120,8 @@ echo $some->then(uppercase(...)) // retourne un nouveau Maybe contenant "MY VALU
     ->value(); // affiche "MY VALUE is not null"
 
 ```
+
+La méthode _then()_ accepte aussi des arguments.
 
 ### Valeurs nulles
 
@@ -192,6 +210,7 @@ echo $not->either(toUpperCase(...))
     ->value(); // affiche "late value for demonstration"
 
 ```
+
 Pour les dingues du try/catch, la méthode orCatch() permet de lancer une Exception donnée :
 
 ```php

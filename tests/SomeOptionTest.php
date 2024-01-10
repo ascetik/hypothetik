@@ -111,4 +111,19 @@ class SomeOptionTest extends TestCase
         $maybe = Maybe::some(fn (string $subject) => 'test for ' . $subject);
         $this->assertSame('test for closure', call_user_func($maybe->value(), 'closure'));
     }
+
+    public function testAnotherOneWithArgument()
+    {
+        $maybe = Maybe::some('/about');
+        $result = $maybe->apply(trim(...), '/');
+        $this->assertSame('about', $result);
+    }
+
+    public function testAnotherAgainWithTwoArguments()
+    {
+        $pathToAboutPage = Maybe::some('/about');
+        $function = fn (string $value, string $separator, string $add) => trim($value, $separator) . '-' . $add;
+        $this->assertSame('about-page', $pathToAboutPage->apply($function, '/', 'page'));
+
+    }
 }
