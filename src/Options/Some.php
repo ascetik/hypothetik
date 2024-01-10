@@ -62,9 +62,10 @@ final class Some implements Option
      */
     public static function of(mixed $value): Option
     {
-        if (is_null($value)) {
-            return new None();
-        }
-        return new self($value);
+        return match (true) {
+            is_null($value) => new None(),
+            $value instanceof Option => $value,
+            default => new self($value)
+        };
     }
 }
