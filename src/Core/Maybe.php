@@ -45,9 +45,9 @@ final class Maybe
      *
      * @return mixed
      */
-    public function apply(callable $function): mixed
+    public function apply(callable $function, mixed ...$arguments): mixed
     {
-        return $this->option->apply($function);
+        return $this->option->apply($function, $arguments);
     }
 
     /**
@@ -111,9 +111,9 @@ final class Maybe
      *
      * @return Maybe<Generic>
      */
-    public function then(callable $function): self
+    public function then(callable $function, mixed ...$arguments): self
     {
-        return self::some($this->apply($function));
+        return self::some($this->apply($function, ...$arguments));
     }
 
     /**
