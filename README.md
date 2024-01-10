@@ -3,49 +3,46 @@
 [FR]
 Monade "maison", pour une gestion avancée des valeurs nulles prédictibles.
 
-## Pourquoi ?
+[EN]
 
-En bossant pour la Nième fois sur un Router compatible D.D.D.|M.V.C/REST (bah oui REST !), je me retrouvais à vérifier des valeurs nulles.
-Ça casse la syntaxe du code, c'est moins facile à lire et à débugger.
-
-J'ai re-découvert récemment les bénéfices à tirer des _monades_, concept issu de la programmation fonctionnelle.
-Les différents packages trouvés sur _packagist_ ne satisfaisaient pas certaines contraintes.
-
-Le paradigme de la programmation fonctionnelle reste intéressant même en P.O.O..
-Cette approche permet de virer ces "dos d'âne" pour avoir une route bien plate et toute droite.
-On dit "fais ceci dans ce cas et ça dans l'autre cas" et on arrive à gérer les valeurs nulles dans le même geste.
-
-Cette implémentation maison de **Maybe** ne propose rien de plus que la gestion des valeurs potentiellement nulles.
+Home made OOP "Monad", easier management of predictible null values.
 
 ## Release notes
 
-> V 0.1.0 : draft version
+> V 0.1.0 : draft version.
 
-- T.D.D. built, Version certainement incomplète.
-- classe **Maybe**, contient une implémentation de **Option** : **Some** ou **None**
-  - apply(_callable_): _mixed_ : retourne le résultat de la fonction donnée
-  - either(_callable_): _Either_ : retourne une instance de **Either** contenant la fonction donnée
-  - equals(_Maybe_): _bool_ : vérifie l'égalité des Options entre l'instance **Maybe** courante et l'instance donnée
-  - isNull(): bool : vérifie si l'option courante est nulle
-  - otherwise(_mixed_): Maybe : retourne un nouveau Maybe si l'instance courante a une option nulle
-  - then(_callable_): _Maybe_ : retourne le résultat de la fonction donnée dans un nouveau Maybe
-  - value(): _mixed_ : retourne la valeur de l'option du **Maybe** courant.
-  - static not(): Maybe : retourne une instance de **Maybe** avec une valeur nulle
-  - static of(_Option_): Maybe : retourne une instance de **Maybe** avec l'option donnée
-  - static some(_mixed_): Maybe : retourne une instance de **Maybe** avec la valeur donnée
-- classe **Either**, contient un Maybe, une fonction à exécuter et les arguments utiles à la fonction :
-  - or(_callable_): Either : retourne un nouveau **Either** si la valeur de **Maybe** est nulle
-  - orThrow(_Trowable_): Either : retourne un nouveau **Either** qui lancera une exception.
-  - try(): _Maybe_ : retourne un **Maybe** contenant le résultat de la fonction contenue par **Either**
-  - value(): _mixed_ : retourne la valeur contenue par le Maybe
-  - static use(_Maybe_, _callable_, _...mixed_): _Either_ : récupération d'une instance de **Either**, constructeur privé
-- interface **Option**, contient la valeur du **Maybe** courant :
-  - apply(_callable_): _mixed_ : exécute la fonction donnée avec la valeur de l'option en paramètre et retourne le résultat
-  - equals(_Option_): bool : Vérifie l'égalité entre deux instances **Option**. Comparaison non typée
-  - value(): mixed : retourne la valeur de l'option
+T.D.D. built
 
-Les classes **Some** et **None** sont les deux implémentations de l'interface **Option** inclues dans ce package.
-Une instance **Option** est inutile seule. C'est **Maybe** qui a le contrôle sur son option.
+## Desciption
+
+The **Maybe** class is the main tool of this package. It handles an **Option** which may contain a value and drives different operations on this value.
+
+**Maybe**::apply(_callable_): _mixed_ : return the result of given function
+**Maybe**::either(_callable_): _Either_ : return an instance of **Either**.
+**Maybe**::equals(_Maybe_): _bool_ : check equality with another **Maybe** instance.
+**Maybe**::isNull(): bool : check if value is null
+**Maybe**::otherwise(_mixed_): Maybe : return a new instance when Option value is null
+**Maybe**::then(_callable_): _Maybe_ : return a new instance with the result of given function
+**Maybe**::value(): _mixed_ : Return raw **Option** value
+**Maybe**::static not(): Maybe : return a **Maybe** instance with null
+**Maybe**::static of(_Option_): Maybe : return a **Maybe** instance with given option
+**Maybe**::static some(_mixed_): Maybe : return a **Maybe** instance with given value
+
+The **Option** interface describe the behavior of an instance containing the exepcted value :
+
+**Option**::apply(_callable_): _mixed_ : return the result of given function with **Option** value as parameter
+**Option**::equals(_Option_): bool : Check equality with another **Option**
+**Option**::value(): mixed : return **Option** value
+
+> Une instance de **Option** ne sert pas à grand chose telle quelle. C'est ValueObject avec un comportement limité à la valeur qu'il contient.
+
+La classe **Either** gère l'exécution de la fonction correspondante aux cas **Option**.
+
+**Either**::or(_callable_, _...mixed_): Either : retourne un nouveau **Either** si la valeur de **Maybe** est nulle
+**Either**::orThrow(_Trowable_): Either : retourne un nouveau **Either** qui lancera une exception.
+**Either**::try(): _Maybe_ : retourne un **Maybe** contenant le résultat de la fonction contenue par **Either**
+**Either**::value(): _mixed_ : retourne la valeur contenue par le Maybe
+**Either**::static use(_Maybe_, _callable_, _...mixed_): _Either_ : récupération d'une instance de **Either**, constructeur privé
 
 ## Usage
 
@@ -209,23 +206,22 @@ echo $not->either(toUpperCase(...))
 
 ```
 
-## Notes/Issues
+## Notes
 
 Le développement de ce package a été "Test-drivé".
 Je n'ai pas encore fait de tests poussés sur les callables autres que les Closures.
 Les tests sur le contenu de Maybe n'ont concerné que des chaines de caractères et des entiers.
 
-Il n'y a pas encore de stratégie spécifique pour exécuter les fonctions.
-On ne peut donc pas encore utiliser des services ou de l'injection de dépendance.
+Cette librairie n'utilise pas de système d'injection de dépendance. Il appartient à l'utilisateur de livrer les instances nécessaires si besoin.
 
-J'ai encore beaucoup de lacunes avec PHP doc.
-Je ne parviens pas à utiliser les types génériques de manière à simplifier l'utilisation de Maybe.
-Je ne suis même pas sûr que ce soit possible, à mmoins de faire une implémentation de **Some** par types de valeur possible.
-Ce qui est débile... Enfin, ce que j'en dit...
+## Issues
+
+Quelques difficultés ont été rencontrées lors de tentatives de documentation efficace du code.
+Je ne sais pas encore gérer les types génériques en PHP DOC.
+Ça ne gène pas l'exécution du code, évidemment, mais on ne bénéficie pas de l'autocomplétion sur les différents IDEs.
+
+Je ne veux pas d'une implémentation de **Option** par type possible.
 
 ## Next Features
 
-Interface pour la stratégie d'exécution des callables donnés, pour pouvoir brancher un système d'injection de dépendance.
-Cette interface sera peut-être à terme l'objet d'un nouveau package.
-
-Traduction de ce README en anglais. I am ze flemme... in ze bilouque...
+Traduction de ce README en anglais.

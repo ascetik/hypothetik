@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Ascetik\Mono\Options;
 
-use Ascetik\Mono\Types\CallStrategy;
 use Ascetik\Mono\Types\Option;
 
 /**
@@ -35,17 +34,19 @@ final class Some implements Option
     {
     }
 
-    public function apply(CallStrategy $runner, callable $function): mixed
+    public function apply(callable $function): mixed
     {
-        return $runner->call($function, [$this->value]);
-        // return call_user_func($function, $this->value);
+        return call_user_func($function, $this->value);
     }
 
     public function equals(Option $option): bool
     {
         return $this->value === $option->value;
     }
+
     /**
+     * @template Generic
+     *
      * @return Generic
      */
     public function value(): mixed
