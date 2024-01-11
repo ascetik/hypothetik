@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Ascetik\Mono\Tests;
+namespace Ascetik\Hypothetik\Tests;
 
-use Ascetik\Mono\Core\Maybe;
-use Ascetik\Mono\Tests\Mocks\MockInstance;
+use Ascetik\Hypothetik\Core\Maybe;
+use Ascetik\Hypothetik\Tests\Mocks\MockInstance;
 use PHPUnit\Framework\TestCase;
 
 class SomeInstanceTest extends TestCase
