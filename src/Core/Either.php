@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace Ascetik\Mono\Core;
+namespace Ascetik\Hypothetik\Core;
 
 use Ascetik\Callapsule\Factories\CallWrapper;
 use Ascetik\Callapsule\Types\CallableType;

@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace Ascetik\Mono\Types;
+namespace Ascetik\Hypothetik\Types;
 
 /**
  * Describe the behavior of a Maybe Option

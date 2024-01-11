@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ascetik\Mono\Tests\Mocks;
+namespace Ascetik\Hypothetik\Tests\Mocks;
 
 class MockInvokableInstanceMutator
 {

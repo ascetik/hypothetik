@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Ascetik\Mono\Tests;
+namespace Ascetik\Hypothetik\Tests;
 
 use Throwable;
 use LogicException;
-use Ascetik\Mono\Core\Maybe;
-use Ascetik\Mono\Core\Either;
+use Ascetik\Hypothetik\Core\Maybe;
+use Ascetik\Hypothetik\Core\Either;
 use PHPUnit\Framework\TestCase;
 
 class NoneOptionTest extends TestCase
