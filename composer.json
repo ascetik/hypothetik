@@ -1,6 +1,6 @@
 {
-    "name": "ascetik/mono",
-    "description": "Home-made monads",
+    "name": "ascetik/hypothetik",
+    "description": "Home-made Maybe monad",
     "type": "library",
     "require-dev": {
         "phpunit/phpunit": "^10.5"
@@ -8,12 +8,12 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Ascetik\\Mono\\": "src/"
+            "Ascetik\\Hypothetik\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Ascetik\\Mono\\Tests\\": "tests/"
+            "Ascetik\\Hypothetik\\Tests\\": "tests/"
         }
     },
     "authors": [
