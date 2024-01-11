@@ -10,8 +10,6 @@ Home made OOP "Monad", for an easier management of predictible null values.
 
 Php version : 8.2.14
 
-Package name replacement from "mono" to "hypothetik"...
-
 ## Desciptions
 
 _final_ class **Maybe** :
