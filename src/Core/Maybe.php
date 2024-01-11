@@ -12,12 +12,12 @@
 
 declare(strict_types=1);
 
-namespace Ascetik\Mono\Core;
+namespace Ascetik\Hypothetik\Core;
 
-use Ascetik\Mono\Options\None;
-use Ascetik\Mono\Options\Some;
-use Ascetik\Mono\Types\Option;
-use Ascetik\Callapsule\Types\CallableType;
+use Ascetik\Hypothetik\Options\None;
+use Ascetik\Hypothetik\Options\Some;
+use Ascetik\Hypothetik\Types\Option;
+
 
 /**
  * Library Core

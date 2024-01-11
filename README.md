@@ -1,4 +1,4 @@
-# Mono
+# Hypothetik
 
 [EN]
 
@@ -6,11 +6,11 @@ Home made OOP "Monad", for an easier management of predictible null values.
 
 ## Release notes
 
-> V 0.1.0 : draft version.
+> V 0.2.0 : still a draft version.
 
 Php version : 8.2.14
 
-T.D.D. built.
+Package name replacement from "mono" to "hypothetik"...
 
 ## Desciptions
 

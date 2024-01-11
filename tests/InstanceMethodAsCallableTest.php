@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Ascetik\Mono\Tests;
+namespace Ascetik\Hypothetik\Tests;
 
-use Ascetik\Mono\Core\Maybe;
+use Ascetik\Hypothetik\Core\Maybe;
 use PHPUnit\Framework\TestCase;
-use Ascetik\Mono\Tests\Mocks\MockInstance;
-use Ascetik\Mono\Tests\Mocks\MockInstanceService;
-use Ascetik\Mono\Tests\Mocks\MockInvokableInstanceMutator;
+use Ascetik\Hypothetik\Tests\Mocks\MockInstance;
+use Ascetik\Hypothetik\Tests\Mocks\MockInstanceService;
+use Ascetik\Hypothetik\Tests\Mocks\MockInvokableInstanceMutator;
 
 class InstanceMethodAsCallableTest extends TestCase
 {
