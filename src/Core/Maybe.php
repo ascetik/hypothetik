@@ -50,16 +50,6 @@ final class Maybe
         return $this->option->apply($function, $arguments);
     }
 
-    /**
-     * Register given function to
-     * execute on a truthy Maybe.
-     * The falsy Maybe function registration
-     * is provided by the returned Either instance.
-     *
-     * @param callable $function
-     *
-     * @return Either<Maybe,CallableType,array>
-     */
     public function either(callable $function): Either
     {
         return Either::use($this, $function, $this->value());
@@ -76,12 +66,7 @@ final class Maybe
     }
 
     /**
-     * Provide an alternative for
-     * a null value replacement
-     *
      * @template Generic
-     * @param Generic $value
-     *
      * @return self<Option<Generic>>
      */
     public function otherwise(mixed $value): self
@@ -101,11 +86,6 @@ final class Maybe
     }
 
     /**
-     * Register a function to execute
-     * when Option value is not null,
-     * returning a new Maybe with
-     * function return as Option
-     *
      * @template Generic
      * @param Generic $value
      *
@@ -117,8 +97,6 @@ final class Maybe
     }
 
     /**
-     * @template Generic
-     *
      * @return self<null>
      */
     public static function not(): self
@@ -137,7 +115,7 @@ final class Maybe
      * @template Generic
      * @param Generic $value
      *
-     * @return Maybe<Generic>
+     * @return Maybe<Generic|null>
      */
     public static function some(mixed $value): self
     {

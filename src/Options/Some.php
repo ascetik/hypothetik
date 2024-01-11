@@ -58,7 +58,7 @@ final class Some implements Option
      * @template Generic
      * @param Generic $value
      *
-     * @return Option<Generic>
+     * @return Option<Generic|null>
      */
     public static function of(mixed $value): Option
     {
