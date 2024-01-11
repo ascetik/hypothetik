@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd"
+    bootstrap="vendor/autoload.php"
+    colors="true"
+    testdox="true"
+>
+    <testsuites>
+        <testsuite name="Storage Tests">
+            <file>tests/SomeOptionTest.php</file>
+            <file>tests/NoneOptionTest.php</file>
+            <file>tests/SomeInstanceTest.php</file>
+            <file>tests/InstanceMethodAsCallableTest.php</file>
+        </testsuite>
+    </testsuites>
+    <php>
+        <ini name="display_errors" value="On" />
+        <ini name="display_startup_errors" value="On" />
+    </php>
+</phpunit>
