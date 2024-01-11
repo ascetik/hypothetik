@@ -1,11 +1,8 @@
 # Mono
 
-[FR]
-Monade "maison", pour une gestion avancée des valeurs nulles prédictibles.
-
 [EN]
 
-Home made OOP "Monad", easier management of predictible null values.
+Home made OOP "Monad", for an easier management of predictible null values.
 
 ## Release notes
 
@@ -13,9 +10,11 @@ Home made OOP "Monad", easier management of predictible null values.
 
 T.D.D. built
 
-## Desciption
+## Desciptions
 
-The **Maybe** class is the main tool of this package. It handles an **Option** which may contain a value and drives different operations on this value.
+_final_ class **Maybe** :
+The **Maybe** class is the main tool of this package.
+It handles an **Option** which may contain a value and drives different operations on this value.
 
 **Maybe**::apply(_callable_, _...mixed_): _mixed_ : return the result of given function
 **Maybe**::either(_callable_): _Either_ : return an instance of **Either**.
@@ -28,60 +27,72 @@ The **Maybe** class is the main tool of this package. It handles an **Option** w
 **Maybe**::static of(_Option_): Maybe : return a **Maybe** instance with given option
 **Maybe**::static some(_mixed_): Maybe : return a **Maybe** instance with given value
 
-The **Option** interface describe the behavior of an instance containing the exepcted value :
+> **Maybe** contructor is private. See examples below for instanciation.
 
-**Option**::apply(_callable_): _mixed_ : return the result of given function with **Option** value as parameter
+---
+
+The **Option** interface describes the behavior of an instance containing the exepcted value :
+
+**Option**::apply(_callable_, _?array_): _mixed_ : return the result of given function with **Option** value as first parameter
 **Option**::equals(_Option_): bool : Check equality with another **Option**
 **Option**::value(): mixed : return **Option** value
 
-> Une instance de **Option** ne sert pas à grand chose telle quelle. C'est ValueObject avec un comportement limité à la valeur qu'il contient.
+This package includes 2 **Option** implementations : _final_ class **None** and _final_ class **Some**.
+Anyone can build another implementation of **Option** to replace **Some** class.
+That's why this interface is exposed here.
 
-La classe **Either** gère l'exécution de la fonction correspondante aux cas **Option**.
+> An **Option** instance is not useful as is. It is a simple ValueObject with a behavior limited to its content.
+> It is a **Maybe** internal value, never exposed to the user.
 
-**Either**::or(_callable_, _...mixed_): Either : retourne un nouveau **Either** si la valeur de **Maybe** est nulle
-**Either**::orThrow(_Trowable_): Either : retourne un nouveau **Either** qui lancera une exception.
-**Either**::try(): _Maybe_ : retourne un **Maybe** contenant le résultat de la fonction contenue par **Either**
+---
+
+_final_ class **Either** :
+
+The **Either** class handles a function to execute according to a **Maybe** Option value.
+It contains the current **Maybe**, a callable (using ascetik/callapsule package) and an optionnal array of parameters.
+
+**Either**::or(_callable_, _...mixed_): Either : return an new **Either** instance if **maybe**'s value is null.
+**Either**::orThrow(_Trowable_): Either : return a new **Either** instance which will throw given Exception.
+**Either**::try(): _Maybe_ : return a new **Maybe** instance with the result of current **Either** function.
 **Either**::value(): _mixed_ : retourne la valeur contenue par le Maybe
 **Either**::static use(_Maybe_, _callable_, _...mixed_): _Either_ : récupération d'une instance de **Either**, constructeur privé
+
+> An **Either** instance is exposed for usage. However, any instance of that type is only useful in a **Maybe** instance context.
 
 ## Usage
 
 ### Construction
 
-Le constructeur de **Maybe** n'est pas disponible. L'instanciation passe par 3 méthodes statiques au choix :
+As **Maybe** constructor access is not available, 3 factory methods are available :
 
-- la méthode statique use() qui prend en paramètre une instance d'**Option** équivalente à l'implémentations **Some** de ce package.
-- la méthode statique not() renvoie une instance **Maybe** avec une option nulle.
+- static method not() returning a **Maybe<null>**.
+- static method some($value) asking for a mixed parameter type and return an instance like **Maybe<typeof $value>**
+- static method of() asking for an implementation of **Option**, opened to extension. Build your own **Option** with dependency injection, for example.
+
 
 ```php
-// instanciation de **Maybe** avec une valeur nulle
 $not = Maybe::not(); // Maybe<null>
 
-// Instanciation avec une valeur non nulle
 $some = Maybe::some('my value'); // Maybe<string>
 $someobj = Maybe::some(new MyOwnInstance()); // Maybe<MyOwnInstance>
+$nullAnyway = Maybe::some(null); // Maybe<null>
 
-// Instanciation avec une **Option** "maison"
-$any = Maybe::of(new MyOwnStringOption('valeur quelconque')); // Maybe<string>
+$any = Maybe::of(new MyOwnStringOption('any string value')); // Maybe<string>
 $anyobj = Maybe::of(new MyOwnOption(new MyOwnInstance())); // Maybe<MyOwnInstance>
+$anyNullObj = Maybe::of(new MyOwnNullOption()); // Maybe<null>
 
 ```
 
-La méthode some(), pour une valeur non nulle, affecte une instance **Some** à l'instance retournée.
-La méthode not() affecte une instance de **None** à l'instance retournée.
-La méthode of() affecte l'instance donnée à la place d'un **Some** pour des implémentations personnalisées.
-les méthodes some() et of() vérifient le contenu proposé. Si ce dernier est nul, un **None** est affecté.
+### Truthy Maybe : mixed value not null
 
-### Valeur non nulle
-
-Pour récupérer les données, en reprenant l'instance "$some" de l'exemple précédent :
+To retrieve the value from the "$some" **Maybe** instance of previous example :
 
 ```php
 echo $some->value(); // "my value"
 
 ```
 
-To return the result of a function, using the Option value as parameter :
+To return the result of a function using the Option value as parameter :
 
 ```php
 
@@ -91,39 +102,41 @@ echo $some->apply(uppercase(...)); // "MY VALUE"
 
 It is possible to add arguments, separated by comas.
 In this case, there are two restrictions :
+
 - The Option value MUST be the first parameter of the function.
 - The order of the arguments must match with the other function parameters.
+
+Another example to illustrate those restrictions :
 
 ```php
 
 $pathToAboutPage = Maybe::some('/about');
 echo $pathToAboutPage->apply(trim(...), '/'); // "about", without forward slash
 
-$function = fn(string $value, string $separator, string $add)=> trim($value, $separator).'-'.$add
+$function = fn(string $value, string $separator, string $add)=> trim($value, $separator) . '-' . $add
 echo $pathToAboutPage->apply($function, '/','page' ); //"about-page"
 
 ```
-
-Il est aussi possible d'obtenir le résultat d'une fonction pour en récupérer une nouvelle instance Maybe contenant ce résultat :
+The **Maybe** value is able to return a new instance of himself with the result of a function.
+The current instance value is passed to the given function :
 
 ```php
 $maybeThen = $some->then(uppercase(...)); // retourne un nouveau Maybe contenant "MY VALUE"
 echo $maybeThen->value(); // affiche "MY VALUE"
 
 ```
-
-Il est donc possible d'enchainer les appels :
+As a new **Maybe** instance is returned, we can chain calls of this method :
 
 ```php
-echo $some->then(uppercase(...)) // retourne un nouveau Maybe contenant "MY VALUE"
+echo $some->then(uppercase(...)) // return a new Maybe containing "MY VALUE"
     ->then(fn(string $value) => $value.' is not null')
-    ->value(); // affiche "MY VALUE is not null"
+    ->value(); // "MY VALUE is not null"
 
 ```
+Just like _apply()_ method, _then()_ can accept some other arguments.
+Those will be appended after the main value as parameters.
 
-La méthode _then()_ accepte aussi des arguments.
-
-### Valeurs nulles
+### Falsy Maybe : null value
 
 Dans le cas de valeurs nulles, le comportement diffère. C'est là tout l'intérêt.
 C'est aussi l'occasion d'en découvrir davantage sur les fonctionnalités proposées.
