@@ -12,9 +12,9 @@
 
 declare(strict_types=1);
 
-namespace Ascetik\Mono\Options;
+namespace Ascetik\Hypothetik\Options;
 
-use Ascetik\Mono\Types\Option;
+use Ascetik\Hypothetik\Types\Option;
 
 /**
  * Option with a not null value
