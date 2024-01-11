@@ -18,16 +18,16 @@ _final_ class **Maybe** :
 The **Maybe** class is the main tool of this package.
 It handles an **Option** which may contain a value and drives different operations on this value.
 
-**Maybe**::apply(_callable_, _...mixed_): _mixed_ : return the result of given function
-**Maybe**::either(_callable_): _Either_ : return an instance of **Either**.
-**Maybe**::equals(_Maybe_): _bool_ : check equality with another **Maybe** instance.
-**Maybe**::isNull(): bool : check if value is null
-**Maybe**::otherwise(_mixed_): Maybe : return a new instance when Option value is null
-**Maybe**::then(_callable_, _...mixed_): _Maybe_ : return a new instance with the result of given function
-**Maybe**::value(): _mixed_ : Return raw **Option** value
-**Maybe**::static not(): Maybe : return a **Maybe** instance with null
-**Maybe**::static of(_Option_): Maybe : return a **Maybe** instance with given option
-**Maybe**::static some(_mixed_): Maybe : return a **Maybe** instance with given value
+- **Maybe**::apply(_callable_, _...mixed_): _mixed_ : return the result of given function
+- **Maybe**::either(_callable_): _Either_ : return an instance of **Either**.
+- **Maybe**::equals(_Maybe_): _bool_ : check equality with another **Maybe** instance.
+- **Maybe**::isNull(): bool : check if value is null
+- **Maybe**::otherwise(_mixed_): Maybe : return a new instance when Option value is null
+- **Maybe**::then(_callable_, _...mixed_): _Maybe_ : return a new instance with the result of given function
+- **Maybe**::value(): _mixed_ : Return raw **Option** value
+- **Maybe**::static not(): Maybe : return a **Maybe** instance with null
+- **Maybe**::static of(_Option_): Maybe : return a **Maybe** instance with given option
+- **Maybe**::static some(_mixed_): Maybe : return a **Maybe** instance with given value
 
 > **Maybe** contructor is private. See examples below for instanciation.
 
@@ -35,9 +35,9 @@ It handles an **Option** which may contain a value and drives different operatio
 
 The **Option** interface describes the behavior of an instance containing the exepcted value :
 
-**Option**::apply(_callable_, _?array_): _mixed_ : return the result of given function with **Option** value as first parameter
-**Option**::equals(_Option_): bool : Check equality with another **Option**
-**Option**::value(): mixed : return **Option** value
+- **Option**::apply(_callable_, _?array_): _mixed_ : return the result of given function with **Option** value as first parameter
+- **Option**::equals(_Option_): bool : Check equality with another **Option**
+- **Option**::value(): mixed : return **Option** value
 
 This package includes 2 **Option** implementations : _final_ class **None** and _final_ class **Some**.
 Anyone can build another implementation of **Option** to replace **Some** class.
@@ -53,10 +53,10 @@ _final_ class **Either** :
 The **Either** class handles a function to execute according to a **Maybe** Option value.
 It contains the current **Maybe**, a callable (using ascetik/callapsule package) and an optionnal array of parameters.
 
-**Either**::or(_callable_, _...mixed_): Either : return an new **Either** instance if **maybe**'s value is null.
-**Either**::try(): _Maybe_ : return a new **Maybe** instance with the result of current **Either** function.
-**Either**::value(): _mixed_ : retourne la valeur contenue par le Maybe
-**Either**::static use(_Maybe_, _callable_, _...mixed_): _Either_ : récupération d'une instance de **Either**, constructeur privé
+- **Either**::or(_callable_, _...mixed_): Either : return an new **Either** instance if **maybe**'s value is null.
+- **Either**::try(): _Maybe_ : return a new **Maybe** instance with the result of current **Either** function.
+- **Either**::value(): _mixed_ : retourne la valeur contenue par le Maybe
+- **Either**::static use(_Maybe_, _callable_, _...mixed_): _Either_ : récupération d'une instance de **Either**, constructeur privé
 
 > An **Either** instance is exposed for usage. However, any instance of that type is only useful in a **Maybe** instance context.
 
@@ -64,7 +64,7 @@ It contains the current **Maybe**, a callable (using ascetik/callapsule package)
 
 ### Construction
 
-As **Maybe** constructor access is not available, 3 factory methods are available :
+As **Maybe** constructor access is not available, 3 factory methods are provided :
 
 ```php
 $not = Maybe::not(); // Maybe<null>
@@ -161,7 +161,7 @@ echo $otherwise->then(strtoupper(...))->value(); // "NOTHING" again.
 
 ```
 
-Here are other some examples chaining methods :
+Some other examples chaining methods :
 
 ```php
 
