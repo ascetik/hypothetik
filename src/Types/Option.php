@@ -21,7 +21,7 @@ namespace Ascetik\Mono\Types;
  */
 interface Option
 {
-    public function apply(callable $function): mixed;
+    public function apply(callable $function, array $arguments = []): mixed;
     public function equals(self $option): bool;
     public function value(): mixed;
 }

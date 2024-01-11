@@ -1,11 +1,8 @@
 # Mono
 
-[FR]
-Monade "maison", pour une gestion avancée des valeurs nulles prédictibles.
-
 [EN]
 
-Home made OOP "Monad", easier management of predictible null values.
+Home made OOP "Monad", for an easier management of predictible null values.
 
 ## Release notes
 
@@ -13,215 +10,226 @@ Home made OOP "Monad", easier management of predictible null values.
 
 T.D.D. built
 
-## Desciption
+## Desciptions
 
-The **Maybe** class is the main tool of this package. It handles an **Option** which may contain a value and drives different operations on this value.
+_final_ class **Maybe** :
+The **Maybe** class is the main tool of this package.
+It handles an **Option** which may contain a value and drives different operations on this value.
 
-**Maybe**::apply(_callable_): _mixed_ : return the result of given function
+**Maybe**::apply(_callable_, _...mixed_): _mixed_ : return the result of given function
 **Maybe**::either(_callable_): _Either_ : return an instance of **Either**.
 **Maybe**::equals(_Maybe_): _bool_ : check equality with another **Maybe** instance.
 **Maybe**::isNull(): bool : check if value is null
 **Maybe**::otherwise(_mixed_): Maybe : return a new instance when Option value is null
-**Maybe**::then(_callable_): _Maybe_ : return a new instance with the result of given function
+**Maybe**::then(_callable_, _...mixed_): _Maybe_ : return a new instance with the result of given function
 **Maybe**::value(): _mixed_ : Return raw **Option** value
 **Maybe**::static not(): Maybe : return a **Maybe** instance with null
 **Maybe**::static of(_Option_): Maybe : return a **Maybe** instance with given option
 **Maybe**::static some(_mixed_): Maybe : return a **Maybe** instance with given value
 
-The **Option** interface describe the behavior of an instance containing the exepcted value :
+> **Maybe** contructor is private. See examples below for instanciation.
 
-**Option**::apply(_callable_): _mixed_ : return the result of given function with **Option** value as parameter
+---
+
+The **Option** interface describes the behavior of an instance containing the exepcted value :
+
+**Option**::apply(_callable_, _?array_): _mixed_ : return the result of given function with **Option** value as first parameter
 **Option**::equals(_Option_): bool : Check equality with another **Option**
 **Option**::value(): mixed : return **Option** value
 
-> Une instance de **Option** ne sert pas à grand chose telle quelle. C'est ValueObject avec un comportement limité à la valeur qu'il contient.
+This package includes 2 **Option** implementations : _final_ class **None** and _final_ class **Some**.
+Anyone can build another implementation of **Option** to replace **Some** class.
+That's why this interface is exposed here.
 
-La classe **Either** gère l'exécution de la fonction correspondante aux cas **Option**.
+> An **Option** instance is not useful as is. It is a simple ValueObject with a behavior limited to its content.
+> It is a **Maybe** internal value, never exposed to the user.
 
-**Either**::or(_callable_, _...mixed_): Either : retourne un nouveau **Either** si la valeur de **Maybe** est nulle
-**Either**::orThrow(_Trowable_): Either : retourne un nouveau **Either** qui lancera une exception.
-**Either**::try(): _Maybe_ : retourne un **Maybe** contenant le résultat de la fonction contenue par **Either**
+---
+
+_final_ class **Either** :
+
+The **Either** class handles a function to execute according to a **Maybe** Option value.
+It contains the current **Maybe**, a callable (using ascetik/callapsule package) and an optionnal array of parameters.
+
+**Either**::or(_callable_, _...mixed_): Either : return an new **Either** instance if **maybe**'s value is null.
+**Either**::try(): _Maybe_ : return a new **Maybe** instance with the result of current **Either** function.
 **Either**::value(): _mixed_ : retourne la valeur contenue par le Maybe
 **Either**::static use(_Maybe_, _callable_, _...mixed_): _Either_ : récupération d'une instance de **Either**, constructeur privé
+
+> An **Either** instance is exposed for usage. However, any instance of that type is only useful in a **Maybe** instance context.
 
 ## Usage
 
 ### Construction
 
-Le constructeur de **Maybe** n'est pas disponible. L'instanciation passe par 3 méthodes statiques au choix :
-
-- la méthode statique use() qui prend en paramètre une instance d'**Option** équivalente à l'implémentations **Some** de ce package.
-- la méthode statique not() renvoie une instance **Maybe** avec une option nulle.
+As **Maybe** constructor access is not available, 3 factory methods are available :
 
 ```php
-// instanciation de **Maybe** avec une valeur nulle
 $not = Maybe::not(); // Maybe<null>
 
-// Instanciation avec une valeur non nulle
 $some = Maybe::some('my value'); // Maybe<string>
 $someobj = Maybe::some(new MyOwnInstance()); // Maybe<MyOwnInstance>
+$nullAnyway = Maybe::some(null); // Maybe<null>
 
-// Instanciation avec une **Option** "maison"
-$any = Maybe::of(new MyOwnStringOption('valeur quelconque')); // Maybe<string>
+$any = Maybe::of(new MyOwnStringOption('any string value')); // Maybe<string>
 $anyobj = Maybe::of(new MyOwnOption(new MyOwnInstance())); // Maybe<MyOwnInstance>
+$anyNullObj = Maybe::of(new MyOwnNullOption()); // Maybe<null>
 
 ```
 
-La méthode some(), pour une valeur non nulle, affecte une instance **Some** à l'instance retournée.
-La méthode not() affecte une instance de **None** à l'instance retournée.
-La méthode of() affecte l'instance donnée à la place d'un **Some** pour des implémentations personnalisées.
-les méthodes some() et of() vérifient le contenu proposé. Si ce dernier est nul, un **None** est affecté.
+### Truthy Maybe : mixed value not null
 
-### Valeur non nulle
-
-Pour récupérer les données, en reprenant l'instance "$some" de l'exemple précédent :
+To retrieve the value from the "$some" **Maybe** instance of previous example :
 
 ```php
-echo $some->value(); // affiche "my value"
+echo $some->value(); // "my value"
 
 ```
 
-Pour transformer une valeur et retourner son résultat :
+To return the result of a function using the Option value as parameter :
 
 ```php
-echo $some->apply(uppercase(...)); // affiche "MY VALUE"
+
+echo $some->apply(strtoupper(...)); // "MY VALUE"
 
 ```
 
-Il est aussi possible d'obtenir le résultat d'une fonction pour en récupérer une nouvelle instance Maybe contenant ce résultat :
+It is possible to add arguments, separated by comas.
+In this case, there are two restrictions :
+
+- The Option value MUST be the first parameter of the function.
+- The order of the arguments must match with the other function parameters.
+
+Another example to illustrate those restrictions :
 
 ```php
-$maybeThen = $some->then(uppercase(...)); // retourne un nouveau Maybe contenant "MY VALUE"
+
+$pathToAboutPage = Maybe::some('/about');
+echo $pathToAboutPage->apply(trim(...), '/'); // "about", without forward slash
+
+$function = fn(string $value, string $separator, string $add)=> trim($value, $separator) . '-' . $add
+echo $pathToAboutPage->apply($function, '/','page' ); //"about-page"
+
+```
+
+The **Maybe** value is able to return a new instance of himself with the result of a function.
+The current instance value is passed to the given function :
+
+```php
+$maybeThen = $some->then(strtoupper(...)); // retourne un nouveau Maybe contenant "MY VALUE"
 echo $maybeThen->value(); // affiche "MY VALUE"
 
 ```
 
-Il est donc possible d'enchainer les appels :
+As a new **Maybe** instance is returned, we can chain calls of this method :
 
 ```php
-echo $some->then(uppercase(...)) // retourne un nouveau Maybe contenant "MY VALUE"
+echo $some->then(strtoupper(...)) // return a new Maybe containing "MY VALUE"
     ->then(fn(string $value) => $value.' is not null')
-    ->value(); // affiche "MY VALUE is not null"
+    ->value(); // "MY VALUE is not null"
 
 ```
 
-### Valeurs nulles
+Just like _apply()_ method, _then()_ can accept some other arguments.
+Those will be appended after the main value as parameters.
 
-Dans le cas de valeurs nulles, le comportement diffère. C'est là tout l'intérêt.
-C'est aussi l'occasion d'en découvrir davantage sur les fonctionnalités proposées.
+### Falsy Maybe : null value
 
-Reprenons l'instance "$not" du premier exemple :
+With a null value, things are slightly different.
+Both _apply()_ and _value()_ methods will return null again.
+The _then()_ method returns a Maybe with a null Option value.
+
+Let's take a look at the "$now" instance from the first example :
 
 ```php
-echo $not->value(); // n'affiche rien car null
-echo $not->apply(uppercase(...)); // null aussi
-echo $not->then(uppercase(...))->value(); // toujours null
+echo $not->value(); // prints nothing because null
+echo $not->apply(strtoupper(...)); // null too
+echo $not->then(strtoupper(...))->value(); // still null
 
 ```
 
-Mais il existe une alternative pour continuer dans ce cas :
+**Maybe** provides a way to substitute a falsy instance to a truthy one by using _otherwise_ method :
 
 ```php
 
 $otherwise = $not->otherwise('nothing');
-echo $otherwise->value(); // affiche "nothing"
-echo $otherwise->apply(uppercase(...)); // affiche "NOTHING"
-echo $otherwise->then(uppercase(...))->value(); // toujours "NOTHING"
+echo $otherwise->value(); // prints "nothing"
+echo $otherwise->apply(strtoupper(...)); // prints "NOTHING"
+echo $otherwise->then(strtoupper(...))->value(); // "NOTHING" again.
 
 ```
 
-Voici quelques exemples plus concrets :
+Here are other some examples chaining methods :
 
 ```php
 
-echo $not->then(uppercase(...))
-    ->otherwise('i replace null')
-    ->then(fn(string $value) => $value . ' for demonstration')
-    ->value(); // affiche "i replace null for demonstration"
+echo $not->then(strtoupper(...)) // run strtoupper with a Maybe<null> won't work
+    ->otherwise('i replace null') // new Maybe<string> available after first then() call
+    ->then(fn(string $value) => $value . ' for demonstration') // run the function with the new instance
+    ->value(); // prints "i replace null for demonstration"
 
-echo $not->otherwise('i replace null')
-    ->then(uppercase(...))
-    ->then(fn(string $value) => $value . ' for demonstration')
-    ->value(); // affiche "I REPLACE NULL for demonstration"
+echo $not->otherwise('i replace null') // new Maybe<string> available
+    ->then(strtoupper(...)) // now transform initial string to upper case
+    ->then(fn(string $value) => $value . ' for demonstration') // and append another string to the previous value
+    ->value(); // prints "I REPLACE NULL for demonstration"
 
 ```
 
-On peut bien sûr utiliser la méthode _otherwise_ pour une valeur non nulle :
+The _otherwise_ method is only applied when the value is null. So :
 
 ```php
-echo $some->otherwise('my other value')
-    ->then(uppercase(...))
+echo $some->otherwise('my other value') // initial $some instance returned
+    ->then(strtoupper(...))
     ->then(fn(string $value) => $value . ' for demonstration')
-    ->value(); // affiche "MY VALUE for demonstration"
+    ->value(); // prints "MY VALUE for demonstration"
 
 ```
 
-Ces exemples utilisent des instances dont on connait déjà le contenu.
-Dans la réalité, on ne peut que supposer le contenu de Maybe au moment où on l'utilise, d'où l'intérêt de cette méthode.
-
-Il existe une autre manière de gérer le retour d'un Maybe selon son Option avec **Either**.
-Une instance **Either** exécute une fonction pour une valeur non nulle et une autre pour une valeur nulle.
-Voilà l'illustration de son fonctionnement :
+Of course, we already know the content of the instances of the examples above.
+During runtime, we just can suppose that our value could be null.
+Sometimes, _then()_ and _otherwise()_ are not enough to make the job we want to.
+Another possibility is to use _either()_ :
 
 ```php
-
+// with Some value
 echo $some->either(toUpperCase(...))
     ->or(fn() => 'late value')
-    ->value(); // affiche "MY VALUE"
+    ->value(); // prints "MY VALUE"
 
+// with None value
 echo $not->either(toUpperCase(...))
     ->or(fn() => 'late value')
-    ->value(); // affiche "late value"
+    ->value(); // prints "late value"
 
 ```
 
-Il est aussi possible d'en obtenir un nouveau **Maybe** :
+And to retrieve a new instance of **Maybe** with **Either** function result :
 
 ```php
 
+// with Some value
 echo $some->either(toUpperCase(...))
     ->or(fn() => 'late value')
-    ->try()    // celui-ci retourne un Maybe contenant le résultat de la fonction exécutée
+    ->try()    // returns a Maybe<string> from "$some" value
     ->then(fn(string $value) => $value . ' for demonstration')
-    ->value(); // affiche "MY VALUE for demonstration"
+    ->value(); // prints "MY VALUE for demonstration"
 
-echo $not->either(toUpperCase(...))
-    ->or(fn() => 'late value')
-    ->try()
-    ->then(fn(string $value) => $value . ' for demonstration')
-    ->value(); // affiche "late value for demonstration"
-
-```
-Pour les dingues du try/catch, la méthode orCatch() permet de lancer une Exception donnée :
-
-```php
-
-echo $some->either(toUpperCase(...))
-    ->orThrow(new Exception('no string to work with...'))
-    ->value(); // affiche bien "my value"
-
-echo $not->either(toUpperCase(...))
-    ->orThrow(new Exception('no string to work with...'))
-    ->value(); // lance l'Exception donnée
+// with None value
+echo $not->either(toUpperCase(...)) // won't run this function
+    ->or(fn() => 'late value') // returns a new Either instance holding this new function
+    ->try() // returns a Maybe<string> with "late value'
+    ->then(fn(string $value) => $value . ' for demonstration') // append a string and return another Maybe with new complete string
+    ->value(); // prints "late value for demonstration"
 
 ```
 
 ## Notes
 
-Le développement de ce package a été "Test-drivé".
-Je n'ai pas encore fait de tests poussés sur les callables autres que les Closures.
-Les tests sur le contenu de Maybe n'ont concerné que des chaines de caractères et des entiers.
+Test Driven Development
 
-Cette librairie n'utilise pas de système d'injection de dépendance. Il appartient à l'utilisateur de livrer les instances nécessaires si besoin.
+No dependency injection. User has to provide required instances.
 
 ## Issues
 
-Quelques difficultés ont été rencontrées lors de tentatives de documentation efficace du code.
-Je ne sais pas encore gérer les types génériques en PHP DOC.
-Ça ne gène pas l'exécution du code, évidemment, mais on ne bénéficie pas de l'autocomplétion sur les différents IDEs.
-
-Je ne veux pas d'une implémentation de **Option** par type possible.
-
-## Next Features
-
-Traduction de ce README en anglais.
+I'm still not able to use Php Documentation in order to provide autocompletion with any IDE.
+Problems on generic type handling.

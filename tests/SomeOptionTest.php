@@ -38,7 +38,6 @@ class SomeOptionTest extends TestCase
         $this->assertSame('PHP IS AWESOME', $uppercase->value());
     }
 
-
     public function testShouldDifferentiateAZeroFromANull()
     {
         $maybe = Maybe::some(0);
@@ -78,5 +77,53 @@ class SomeOptionTest extends TestCase
         $falsySome = Maybe::some(null)->otherwise('nothing');
         $this->assertInstanceOf(Maybe::class, $falsySome);
         $this->assertSame('nothing', $falsySome->value());
+    }
+
+    public function testShouldNowAcceptMoreArgumentsInApplyCallable()
+    {
+        $uppercase = $this->maybe
+            ->then(fn (string $value, string $add) => $value . ' ' . $add, 'is awesome')
+            ->then(strtoupper(...));
+        $this->assertSame('PHP IS AWESOME', $uppercase->value());
+    }
+
+    public function testMaybeCannotHoldAnotherMaybe()
+    {
+        $otherMaybe = Maybe::some($this->maybe);
+        $this->assertIsString($otherMaybe->value());
+        $this->assertSame('php', $otherMaybe->value());
+    }
+
+    public function testASomeInstanceCannotHoldAnotherOption()
+    {
+        $otherMaybe = Maybe::some(Maybe::some('other'));
+        $this->assertIsString($otherMaybe->value());
+    }
+
+    public function testASomeInstanceCannotHoldANoneOption()
+    {
+        $otherMaybe = Maybe::some(Maybe::not());
+        $this->assertNull($otherMaybe->value());
+    }
+
+    public function testMaybeContainingAClosure()
+    {
+        $maybe = Maybe::some(fn (string $subject) => 'test for ' . $subject);
+        $this->assertSame('test for closure', call_user_func($maybe->value(), 'closure'));
+    }
+
+    public function testAnotherOneWithArgument()
+    {
+        $maybe = Maybe::some('/about');
+        $result = $maybe->apply(trim(...), '/');
+        $this->assertSame('about', $result);
+    }
+
+    public function testAnotherAgainWithTwoArguments()
+    {
+        $pathToAboutPage = Maybe::some('/about');
+        $function = fn (string $value, string $separator, string $add) => trim($value, $separator) . '-' . $add;
+        $this->assertSame('about-page', $pathToAboutPage->apply($function, '/', 'page'));
+
     }
 }

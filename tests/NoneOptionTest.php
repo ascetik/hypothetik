@@ -76,15 +76,6 @@ class NoneOptionTest extends TestCase
             ->value();
     }
 
-    public function testEitherWithExceptionThrowShortCut()
-    {
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('just a test');
-        echo $this->maybe->either(strtoupper(...))
-            ->orThrow(new LogicException('just a test'))
-            ->value();
-    }
-
     public function testShouldNotApplyChangesOnNoneValueWithoutDefault()
     {
         $uppercase = $this->maybe

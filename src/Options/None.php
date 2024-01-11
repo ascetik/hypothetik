@@ -23,7 +23,7 @@ use Ascetik\Mono\Types\Option;
  */
 final class None implements Option
 {
-    public function apply(callable $function): null
+    public function apply(callable $function, array $arguments = []): null
     {
         return null;
     }

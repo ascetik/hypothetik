@@ -54,25 +54,25 @@ final class Either
         return $this;
     }
 
-    /**
-     * Register a Throwable instance
-     * to throw on null Option value
-     *
-     * @param Throwable $thrown
-     *
-     * @return self
-     */
-    public function orThrow(Throwable $thrown): self
-    {
-        return self::use(
-            Maybe::not(),
-                function (Throwable $e) {
-                    throw $e;
-                }
-            ,
-            $thrown
-        );
-    }
+    // /**
+    //  * Register a Throwable instance
+    //  * to throw on null Option value
+    //  *
+    //  * @param Throwable $thrown
+    //  *
+    //  * @return self
+    //  */
+    // public function orThrow(Throwable $thrown): self
+    // {
+    //     return self::use(
+    //         Maybe::not(),
+    //             function (Throwable $e) {
+    //                 throw $e;
+    //             }
+    //         ,
+    //         $thrown
+    //     );
+    // }
 
     /**
      * Return a Maybe instance holding

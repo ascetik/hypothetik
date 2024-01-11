@@ -34,9 +34,9 @@ final class Some implements Option
     {
     }
 
-    public function apply(callable $function): mixed
+    public function apply(callable $function, array $arguments = []): mixed
     {
-        return call_user_func($function, $this->value);
+        return call_user_func_array($function, [$this->value, ...$arguments]);
     }
 
     public function equals(Option $option): bool
@@ -62,9 +62,10 @@ final class Some implements Option
      */
     public static function of(mixed $value): Option
     {
-        if (is_null($value)) {
-            return new None();
-        }
-        return new self($value);
+        return match (true) {
+            is_null($value) => new None(),
+            $value instanceof Option => $value,
+            default => new self($value)
+        };
     }
 }
