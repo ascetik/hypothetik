@@ -39,7 +39,7 @@ final class Either
     public function or(callable $function, mixed ...$arguments): self
     {
         if (!$this->maybe->isValid()) {
-            return self::use($this->maybe, $function, ...$arguments);
+            return self::useContext($this->maybe, $function, ...$arguments);
         }
         return $this;
     }
@@ -54,7 +54,7 @@ final class Either
         return $this->call->apply($this->arguments);
     }
 
-    public static function use(Maybe $maybe, callable $call, mixed ...$arguments): self
+    public static function useContext(Hypothetik $maybe, callable $call, mixed ...$arguments): self
     {
 
         return new self($maybe, CallWrapper::wrap($call), ...$arguments);
