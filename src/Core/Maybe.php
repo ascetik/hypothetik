@@ -92,7 +92,7 @@ final class Maybe implements Hypothetik
      *
      * @return Maybe<Generic>
      */
-    public function then(callable $function, mixed ...$arguments): self
+    public function then(callable $function, mixed ...$arguments): Hypothetik
     {
         return self::some($this->apply($function, ...$arguments));
     }

@@ -14,6 +14,7 @@
             <file>tests/InstanceMethodAsCallableTest.php</file>
             <file>tests/TruthyConditionTest.php</file>
             <file>tests/FalsyConditionTest.php</file>
+            <file>tests/ConditionFromMaybeTest.php</file>
         </testsuite>
     </testsuites>
     <php>
