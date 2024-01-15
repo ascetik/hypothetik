@@ -6,6 +6,7 @@ namespace Ascetik\Hypothetik\Types;
 
 interface Hypothetik
 {
-    // public function apply(callable $function, mixed ...$arguments): mixed;
+    public function apply(callable $function, mixed ...$arguments): mixed;
+    public function value(): mixed;
 
 }
