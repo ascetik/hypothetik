@@ -16,6 +16,7 @@ namespace Ascetik\Hypothetik\Core;
 
 use Ascetik\Callapsule\Factories\CallWrapper;
 use Ascetik\Callapsule\Types\CallableType;
+use Ascetik\Hypothetik\Types\Hypothetik;
 
 /**
  * Provide the ability to run a function
@@ -28,7 +29,7 @@ final class Either
     private readonly array $arguments;
 
     private function __construct(
-        private readonly Maybe $maybe,
+        private readonly Hypothetik $maybe,
         private readonly CallableType $call,
         mixed ...$arguments
     ) {
