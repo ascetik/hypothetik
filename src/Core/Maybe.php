@@ -16,6 +16,7 @@ namespace Ascetik\Hypothetik\Core;
 
 use Ascetik\Hypothetik\Options\None;
 use Ascetik\Hypothetik\Options\Some;
+use Ascetik\Hypothetik\Types\Hypothetik;
 use Ascetik\Hypothetik\Types\Option;
 
 
@@ -28,7 +29,7 @@ use Ascetik\Hypothetik\Types\Option;
  * @template Generic
  * @version 0.1.0 (draft)
  */
-final class Maybe
+final class Maybe implements Hypothetik
 {
     /**
      * @param Option<Generic> $option
