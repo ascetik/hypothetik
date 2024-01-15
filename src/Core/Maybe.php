@@ -125,7 +125,7 @@ final class Maybe implements Hypothetik
             return $value;
         }
         if (is_bool($value)) {
-            return When::as($value);
+            return When::ever($value);
         }
         return self::of(Some::of($value));
     }
