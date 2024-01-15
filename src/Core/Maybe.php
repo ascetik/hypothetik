@@ -16,19 +16,21 @@ namespace Ascetik\Hypothetik\Core;
 
 use Ascetik\Hypothetik\Options\None;
 use Ascetik\Hypothetik\Options\Some;
+use Ascetik\Hypothetik\Types\Hypothetik;
 use Ascetik\Hypothetik\Types\Option;
 
 
 /**
  * Library Core
  *
- * Hold an optionnal value in order
- * to avoid checks on an eventually null value.
+ * This is a monad handling an
+ * potential value in a fluent way
+ * to limit null checks
  *
  * @template Generic
  * @version 0.1.0 (draft)
  */
-final class Maybe
+final class Maybe implements Hypothetik
 {
     /**
      * @param Option<Generic> $option
@@ -50,9 +52,9 @@ final class Maybe
         return $this->option->apply($function, $arguments);
     }
 
-    public function either(callable $function): Either
+    public function either(callable $function, mixed ...$arguments): Either
     {
-        return Either::use($this, $function, $this->value());
+        return Either::useContext($this, $function, ...[$this->value(), ...$arguments]);
     }
 
     public function equals(self $value): bool
@@ -60,9 +62,9 @@ final class Maybe
         return $this->option->equals($value->option);
     }
 
-    public function isNull(): bool
+    public function isValid(): bool
     {
-        return is_null($this->value());
+        return !is_null($this->value());
     }
 
     /**
@@ -91,7 +93,7 @@ final class Maybe
      *
      * @return Maybe<Generic>
      */
-    public function then(callable $function, mixed ...$arguments): self
+    public function then(callable $function, mixed ...$arguments): Hypothetik
     {
         return self::some($this->apply($function, ...$arguments));
     }
@@ -117,11 +119,13 @@ final class Maybe
      *
      * @return Maybe<Generic|null>
      */
-    public static function some(mixed $value): self
+    public static function some(mixed $value): Hypothetik
     {
-        if($value instanceof self)
-        {
+        if ($value instanceof self) {
             return $value;
+        }
+        if (is_bool($value)) {
+            return When::as($value);
         }
         return self::of(Some::of($value));
     }
