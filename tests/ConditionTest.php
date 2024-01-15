@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ascetik\Hypothetik\Tests;
 
 use Ascetik\Hypothetik\Core\Condition;
+use Ascetik\Hypothetik\Core\Maybe;
 use PHPUnit\Framework\TestCase;
 
 class ConditionTest extends TestCase
@@ -35,5 +36,20 @@ class ConditionTest extends TestCase
         $this->assertNull($applied);
     }
 
+    public function testShouldThenReturnAStringMaybeInstance()
+    {
+        $boolean = Condition::of(true);
+        $maybe = $boolean->then(fn()=>'truthy result');
+        $this->assertInstanceOf(Maybe::class, $maybe);
+        $this->assertSame('truthy result', $maybe->value());
+    }
 
+
+    public function testShouldThenReturnANullMaybeInstance()
+    {
+        $boolean = Condition::of(false);
+        $maybe = $boolean->then(fn()=>'truthy result');
+        $this->assertInstanceOf(Maybe::class, $maybe);
+        $this->assertNull($maybe->value());
+    }
 }
