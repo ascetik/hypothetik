@@ -61,9 +61,9 @@ final class Maybe implements Hypothetik
         return $this->option->equals($value->option);
     }
 
-    public function isNull(): bool
+    public function isValid(): bool
     {
-        return is_null($this->value());
+        return !is_null($this->value());
     }
 
     /**
@@ -118,11 +118,14 @@ final class Maybe implements Hypothetik
      *
      * @return Maybe<Generic|null>
      */
-    public static function some(mixed $value): self
+    public static function some(mixed $value): Hypothetik
     {
         if($value instanceof self)
         {
             return $value;
+        }
+        if(is_bool($value)){
+            return Condition::of($value);
         }
         return self::of(Some::of($value));
     }

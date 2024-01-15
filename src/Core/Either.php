@@ -37,7 +37,7 @@ final class Either
 
     public function or(callable $function, mixed ...$arguments): self
     {
-        if ($this->maybe->isNull()) {
+        if (!$this->maybe->isValid()) {
             return self::use($this->maybe, $function, ...$arguments);
         }
         return $this;
