@@ -39,7 +39,7 @@ class ConditionTest extends TestCase
     public function testShouldThenReturnAStringMaybeInstance()
     {
         $boolean = Condition::of(true);
-        $maybe = $boolean->then(fn()=>'truthy result');
+        $maybe = $boolean->then(fn () => 'truthy result');
         $this->assertInstanceOf(Maybe::class, $maybe);
         $this->assertSame('truthy result', $maybe->value());
     }
@@ -48,8 +48,25 @@ class ConditionTest extends TestCase
     public function testShouldThenReturnANullMaybeInstance()
     {
         $boolean = Condition::of(false);
-        $maybe = $boolean->then(fn()=>'truthy result');
+        $maybe = $boolean->then(fn () => 'truthy result');
         $this->assertInstanceOf(Maybe::class, $maybe);
         $this->assertNull($maybe->value());
+    }
+
+    public function testOtherwiseForATruthyCondition()
+    {
+        $boolean = Condition::of(true);
+        $maybe = $boolean->then(fn () => 'truthy result')
+            ->otherwise('falsy result');
+        $this->assertSame('truthy result', $maybe->value());
+    }
+
+
+    public function testOtherwiseForAFalsyCondition()
+    {
+        $boolean = Condition::of(false);
+        $maybe = $boolean->then(fn () => 'truthy result')
+            ->otherwise('falsy result');
+        $this->assertSame('falsy result', $maybe->value());
     }
 }
