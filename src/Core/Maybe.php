@@ -23,8 +23,9 @@ use Ascetik\Hypothetik\Types\Option;
 /**
  * Library Core
  *
- * Hold an optionnal value in order
- * to avoid checks on an eventually null value.
+ * This is a monad handling an
+ * potential value in a fluent way
+ * to limit null checks
  *
  * @template Generic
  * @version 0.1.0 (draft)

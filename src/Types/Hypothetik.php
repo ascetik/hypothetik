@@ -17,8 +17,8 @@ namespace Ascetik\Hypothetik\Types;
 use Ascetik\Hypothetik\Core\Either;
 
 /**
- * Describe the behavior of a class able
- * to handle the validity of a value
+ * Describe the behavior of a monad
+ * handling a potentially invalid value
  *
  * @version 1.0.0
  */
@@ -26,9 +26,9 @@ interface Hypothetik
 {
     public function apply(callable $function, mixed ...$arguments): mixed;
     public function either(callable $function, mixed ...$arguments): Either;
+    public function then(callable $function, mixed ...$arguments): self;
     public function isValid(): bool;
     public function otherwise(mixed $value): self;
-    public function then(callable $function, mixed ...$arguments): self;
     public function value(): mixed;
 
 }

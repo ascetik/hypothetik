@@ -20,7 +20,9 @@ use Ascetik\Hypothetik\Types\Hypothetik;
 /**
  * Handle hypothetik boolean value
  *
- * Boolean in a monad
+ * This is a monad handling a
+ * boolean value in a fluent way
+ * to limit "if" expressions usage
  *
  * @version 1.0.0
  */
