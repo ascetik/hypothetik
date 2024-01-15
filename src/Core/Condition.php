@@ -23,12 +23,15 @@ class Condition implements Hypothetik
 
     public function apply(callable $function, mixed ...$arguments): mixed
     {
-        if ($this->value()) {
-            return call_user_func_array($function, $arguments);
-        }
-        return null;
+        return $this->value()
+            ? call_user_func_array($function, $arguments)
+            : null;
     }
 
+    public function isValid(): bool
+    {
+        return $this->bool->value();
+    }
 
     public function otherwise(mixed $value): Hypothetik
     {
@@ -39,19 +42,7 @@ class Condition implements Hypothetik
 
     public function then(callable $function, mixed ...$arguments): Hypothetik
     {
-        /**
-         * Si je suis à true, j'execute la fonction qui m'est donnée et j'en retourne le résultat dans un Maybe
-         * Si je suis à false,
-         *
-         * Admettons que je cherche ma route parmi les routes enregistrées.
-         * si la route courante ne correspond pas, je me retrouve avec un Condition<false>
-         * et pour chaque route, je veux
-         */
         return  Maybe::some($this->apply($function, ...$arguments));
-        // if ($this->value()) {
-        //     return Maybe::some($this->apply($function, ...$arguments));
-        // }
-        // return Maybe::not();
     }
 
     public function value(): mixed
