@@ -33,7 +33,7 @@ class Condition implements Hypothetik
     {
     }
 
-    public static function of(bool $bool)
+    public static function as(bool $bool): self
     {
         return new self(Some::of($bool));
     }

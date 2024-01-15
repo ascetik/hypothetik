@@ -14,7 +14,7 @@ class TruthyConditionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->boolean = Condition::of(true);
+        $this->boolean = Condition::as(true);
     }
 
     public function testHypothetikBooleanValue()

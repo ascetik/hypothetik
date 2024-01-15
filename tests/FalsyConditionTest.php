@@ -14,7 +14,7 @@ class FalsyConditionTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->boolean = Condition::of(false);
+        $this->boolean = Condition::as(false);
     }
 
     public function testHypothetikBooleanValue()
