@@ -12,7 +12,7 @@
             <file>tests/NoneOptionTest.php</file>
             <file>tests/SomeInstanceTest.php</file>
             <file>tests/InstanceMethodAsCallableTest.php</file>
-            <file>tests/BooleanTest.php</file>
+            <file>tests/ConditionTest.php</file>
         </testsuite>
     </testsuites>
     <php>
