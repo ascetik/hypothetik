@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * This is part of the ascetik/mono package
+ *
+ * @package    Mono\Core
+ * @category   Core
+ * @license    https://opensource.org/license/mit/  MIT License
+ * @copyright  Copyright (c) 2023, Vidda
+ * @author     Vidda <vidda@ascetik.fr>
+ */
+
 declare(strict_types=1);
 
 namespace Ascetik\Hypothetik\Core;
@@ -7,6 +17,13 @@ namespace Ascetik\Hypothetik\Core;
 use Ascetik\Hypothetik\Options\Some;
 use Ascetik\Hypothetik\Types\Hypothetik;
 
+/**
+ * Handle hypothetik boolean value
+ *
+ * Boolean in a monad
+ *
+ * @version 1.0.0
+ */
 class Condition implements Hypothetik
 {
     /**
@@ -26,6 +43,11 @@ class Condition implements Hypothetik
         return $this->value()
             ? call_user_func_array($function, $arguments)
             : null;
+    }
+
+    public function either(callable $function, mixed ...$arguments): Either
+    {
+        return Either::useContext($this, $function, ...$arguments);
     }
 
     public function isValid(): bool

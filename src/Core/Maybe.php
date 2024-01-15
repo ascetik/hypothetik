@@ -51,9 +51,9 @@ final class Maybe implements Hypothetik
         return $this->option->apply($function, $arguments);
     }
 
-    public function either(callable $function): Either
+    public function either(callable $function, mixed ...$arguments): Either
     {
-        return Either::use($this, $function, $this->value());
+        return Either::useContext($this, $function, ...[$this->value(), ...$arguments]);
     }
 
     public function equals(self $value): bool
@@ -120,11 +120,10 @@ final class Maybe implements Hypothetik
      */
     public static function some(mixed $value): Hypothetik
     {
-        if($value instanceof self)
-        {
+        if ($value instanceof self) {
             return $value;
         }
-        if(is_bool($value)){
+        if (is_bool($value)) {
             return Condition::of($value);
         }
         return self::of(Some::of($value));
