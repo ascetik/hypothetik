@@ -24,7 +24,7 @@ use Ascetik\Hypothetik\Types\Hypothetik;
  *
  * @version 1.0.0
  */
-class Condition implements Hypothetik
+class When implements Hypothetik
 {
     /**
      * @param Some<bool> $bool

@@ -6,15 +6,15 @@ namespace Ascetik\Hypothetik\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Ascetik\Hypothetik\Core\Maybe;
-use Ascetik\Hypothetik\Core\Condition;
+use Ascetik\Hypothetik\Core\When;
 
 class FalsyConditionTest extends TestCase
 {
-    private Condition $boolean;
+    private When $boolean;
 
     protected function setUp(): void
     {
-        $this->boolean = Condition::as(false);
+        $this->boolean = When::as(false);
     }
 
     public function testHypothetikBooleanValue()

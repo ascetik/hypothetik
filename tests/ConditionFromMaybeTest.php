@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ascetik\Hypothetik\Tests;
 
-use Ascetik\Hypothetik\Core\Condition;
+use Ascetik\Hypothetik\Core\When;
 use Ascetik\Hypothetik\Core\Maybe;
 use PHPUnit\Framework\TestCase;
 
@@ -13,14 +13,14 @@ class ConditionFromMaybeTest extends TestCase
     public function testMaybeBuildsAConditionOnBoolValue()
     {
         $maybe = Maybe::some(true);
-        $this->assertInstanceOf(Condition::class, $maybe);
+        $this->assertInstanceOf(When::class, $maybe);
     }
 
     public function testMaybeValueBecomingATruthyCondition()
     {
         $maybe = Maybe::some('/about')
             ->then(fn (string $value) => str_starts_with($value, '/'));
-        $this->assertInstanceOf(Condition::class, $maybe);
+        $this->assertInstanceOf(When::class, $maybe);
         $this->assertTrue($maybe->value());
     }
 

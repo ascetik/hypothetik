@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Ascetik\Hypothetik\Tests;
 
-use Ascetik\Hypothetik\Core\Condition;
+use Ascetik\Hypothetik\Core\When;
 use Ascetik\Hypothetik\Core\Maybe;
 use PHPUnit\Framework\TestCase;
 
 class TruthyConditionTest extends TestCase
 {
-    private Condition $boolean;
+    private When $boolean;
 
     protected function setUp(): void
     {
-        $this->boolean = Condition::as(true);
+        $this->boolean = When::as(true);
     }
 
     public function testHypothetikBooleanValue()
