@@ -84,8 +84,9 @@ $truthy = Maybe::some(true); // this is a "When" instance
 $falsy = Maybe::some(false); // this is a "When" instance too
 
 ```
+
 The version 0.3.0 provides a new **When** class to use with booleans.
-As **Maybe** is invalid with a null value, a **When** instance is invalid when its value is *false*.
+As **Maybe** is invalid with a null value, a **When** instance is invalid when its value is _false_.
 More descriptions below...
 
 ### Valid value : mixed value not null
@@ -251,7 +252,15 @@ $whenNot = Maybe::some(str_contains($phrase, 'only'));
 echo $whenNot->value() ? 'valid' : 'invalid'; // 'invalid'
 
 ```
-But it's possible to work with more complicated things :
+
+**When** class has its own static factory method :
+
+```php
+$when = When::ever(true); // or false...
+
+```
+
+It's possible to combine **Maybe** and **When** instance calls :
 
 ```php
 $truthyWhen = Maybe::some('/about') // instance of Maybe</about>
@@ -273,11 +282,15 @@ echo $when; // 'falsy result'
 
 ## Notes
 
-Test Driven Development
-
 No dependency injection. User has to provide required instances.
+A **Maybe** cannot carry another **Hypothetik**, an **Option** cannot carry another **Option**. Trying to do so will return the given instance as is.
 
 ## Issues
 
 I'm still not able to use Php Documentation in order to provide autocompletion with any IDE.
 Problems on generic type handling.
+
+I still don't need any **Hypothetik** container to handle multiple **Hypothetik** instances.
+I'll think about this kind of implementation only if necessary...
+
+Maybe some tests are still missing. I'm not sure to cover all possible use cases.
