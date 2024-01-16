@@ -108,9 +108,7 @@ final class Maybe implements Hypothetik
 
     public static function of(Option $option): self
     {
-        return !is_null($option->value())
-            ? new self($option)
-            : self::not();
+        return new self($option);
     }
 
     /**

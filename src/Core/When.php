@@ -27,7 +27,7 @@ use Ascetik\Hypothetik\Types\Hypothetik;
  * @template Boolean of bool
  * @version 1.0.0
  */
-class When implements Hypothetik
+final class When implements Hypothetik
 {
     /**
      * @template Boolean of bool
