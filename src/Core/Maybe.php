@@ -28,7 +28,7 @@ use Ascetik\Hypothetik\Types\Option;
  * to limit null checks
  *
  * @template Generic
- * @version 0.1.0 (draft)
+ * @version 1.0.0
  */
 final class Maybe implements Hypothetik
 {
