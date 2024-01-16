@@ -6,7 +6,7 @@ Home made OOP "Monad", for an easier management of predictible null values.
 
 ## Release notes
 
-> V 0.3.0 : still a draft version.
+> Version 0.3.0 : still a draft version.
 
 Php version : 8.2.14
 
