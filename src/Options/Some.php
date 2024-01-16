@@ -44,6 +44,10 @@ final class Some implements Option
         return $this->value === $option->value;
     }
 
+    public function isValid(): bool
+    {
+        return true;
+    }
     /**
      * @template Generic
      *
