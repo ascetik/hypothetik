@@ -2,32 +2,35 @@
 
 [EN]
 
-Home made OOP "Monad", for an easier management of predictible null values.
+Home made OOP "Monad", for an easier management of hypothetical values.
 
 ## Release notes
 
-> V 0.2.0 : still a draft version.
+> Version 0.3.0 : still a draft version.
 
 Php version : 8.2.14
 
-## Desciptions
+- New **Hypothetik** interface, describing the behavior of a monad included in this package.
+- **Maybe** class implements **Hypothetik** interface
+- New **When**, **Hypothetik** implementation to handle booleans.
 
-_final_ class **Maybe** :
-The **Maybe** class is the main tool of this package.
-It handles an **Option** which may contain a value and drives different operations on this value.
+## Descriptions
 
-- **Maybe**::apply(_callable_, _...mixed_): _mixed_ : return the result of given function
-- **Maybe**::either(_callable_): _Either_ : return an instance of **Either**.
-- **Maybe**::equals(_Maybe_): _bool_ : check equality with another **Maybe** instance.
-- **Maybe**::isNull(): bool : check if value is null
-- **Maybe**::otherwise(_mixed_): Maybe : return a new instance when Option value is null
-- **Maybe**::then(_callable_, _...mixed_): _Maybe_ : return a new instance with the result of given function
-- **Maybe**::value(): _mixed_ : Return raw **Option** value
-- **Maybe**::static not(): Maybe : return a **Maybe** instance with null
-- **Maybe**::static of(_Option_): Maybe : return a **Maybe** instance with given option
-- **Maybe**::static some(_mixed_): Maybe : return a **Maybe** instance with given value
+### Interfaces
 
-> **Maybe** contructor is private. See examples below for instanciation.
+**OptionnalValue** is a general interface shared by both **Hypothetik** an **Option** instances.
+
+- **OptionnalValue**::isValid(): _bool_ : check validity of a value (!null & !false)
+- **OptionnalValue**::value(): _mixed_ : return **Option** raw value
+
+---
+
+The **Hypothetik** interface describes the way to handle a value which may be null or false using callables.
+
+- **Hypothetik**::apply(_callable_, _...mixed_): _mixed_ : return the result of given callable using the **Option** value
+- **Hypothetik**::either(_callable_, _...mixed_): _Either_ : return an **Either** instance according to an **Option**.
+- **Hypothetik**::then(_callable_, _...mixed_): _Hypothetik_ : return a new **Hypothetic** instance with the result of given callable.
+- **Hypothetik**::otherwise(_mixed_): _Hypothetik_ : choose an alternative to return if the **Option** value is invalid.
 
 ---
 
@@ -35,28 +38,66 @@ The **Option** interface describes the behavior of an instance containing the ex
 
 - **Option**::apply(_callable_, _?array_): _mixed_ : return the result of given function with **Option** value as first parameter
 - **Option**::equals(_Option_): bool : Check equality with another **Option**
-- **Option**::value(): mixed : return **Option** value
+- **Option**::isValid(): _bool_ : see **OptionnalValue** interface
+- **Option**::value(): mixed : see **OptionnalValue** interface
 
 This package includes 2 **Option** implementations : _final_ class **None** and _final_ class **Some**.
 Anyone can build another implementation of **Option** to replace **Some** class.
 That's why this interface is exposed here.
 
-> An **Option** instance is not useful as is. It is a simple ValueObject with a behavior limited to its content.
-> It is a **Maybe** internal value, never exposed to the user.
+> An **Option** is a simple ValueObject with simple behaviors, unuseful outside of an **Hypothetik** instance.
+
+### Available Implementations
+
+_final_ class **Maybe** :
+The **Maybe** class is the main tool of this package.
+It handles an **Option** which may contain a value, or may not, and drives different operations on this value, or not...
+
+- **Maybe**::equals(_Maybe_): _bool_ : check equality with another **Maybe** instance.
+- **Maybe**::apply(_callable_, _...mixed_): _mixed_ : see **Hypothetik** interface
+- **Maybe**::either(_callable_): _Either_ : see **Hypothetik** interface
+- **Maybe**::isValid(): _bool_ : see **OptionnalValue** interface
+- **Maybe**::otherwise(_mixed_): _Hypothetik_ : see **Hypothetik** interface
+- **Maybe**::then(_callable_, _...mixed_): _Hypothetik_ : see **Hypothetik** interface
+- **Maybe**::value(): _mixed_ : see **OptionnalValue** interface
+- static **Maybe**::not(): _Maybe_ : return a **Maybe** instance with a **None** option
+- static **Maybe**::of(_Option_): _Maybe_ : return a **Maybe** instance with given **Option** instance.
+- static **Maybe**::some(_mixed_): _Hypothetik_ : return a **Hypothetik** instance with given value
+
+> **Maybe** contructor is private. See examples below for instanciation.
+
+---
+
+_final_ class **When** : (v.0.3.0)
+This implementation works almost like **Maybe**. The difference is that **When** contains an **Option** with a bool value and a falsy **Option** is considered as invalid.
+
+- **When**::apply(_callable_, _...mixed_): _mixed_ : see **Hypothetik** interface
+- **When**::either(_callable_): _Either_ : see **Hypothetik** interface
+- **When**::isValid(): _bool_ : see **OptionnalValue** interface
+- **When**::otherwise(_mixed_): _Hypothetik_ : see **Hypothetik** interface
+- **When**::then(_callable_, _...mixed_): _Hypothetik_ : see **Hypothetik** interface
+- **When**::value(): _mixed_ : see **OptionnalValue** interface
+- static **When**::ever(_bool_): _When_ : return a **Maybe** instance with given value
+
+> Private constructor. Use **When**::ever(_bool_) or **Maybe**::some(_bool_) methods to build an instance.
 
 ---
 
 _final_ class **Either** :
 
 The **Either** class handles a function to execute according to a **Maybe** Option value.
-It contains the current **Maybe**, a callable (using ascetik/callapsule package) and an optionnal array of parameters.
 
 - **Either**::or(_callable_, _...mixed_): Either : return an new **Either** instance if **maybe**'s value is null.
 - **Either**::try(): _Maybe_ : return a new **Maybe** instance with the result of current **Either** function.
 - **Either**::value(): _mixed_ : retourne la valeur contenue par le Maybe
 - **Either**::static use(_Maybe_, _callable_, _...mixed_): _Either_ : récupération d'une instance de **Either**, constructeur privé
 
-> An **Either** instance is exposed for usage. However, any instance of that type is only useful in a **Maybe** instance context.
+> An **Either** instance is exposed by a **Hypothetik** implementation for usage, unuseful in any other context.
+
+---
+
+_final_ class **None** is a "null value" **Option**.
+_final_ class **Some** is a not null value **Option**.
 
 ## Usage
 
@@ -75,18 +116,22 @@ $any = Maybe::of(new MyOwnStringOption('any string value')); // Maybe<string>
 $anyobj = Maybe::of(new MyOwnOption(new MyOwnInstance())); // Maybe<MyOwnInstance>
 $anyNullObj = Maybe::of(new MyOwnNullOption()); // Maybe<null>
 
+// version 0.3.0
+$truthy = Maybe::some(true); // this is a truthy "When" instance
+$falsy = Maybe::some(false); // this is a falsy "When" instance
+
 ```
 
-### Truthy Maybe : mixed value not null
+### Valid value : mixed value not null
 
-To retrieve the value from the "$some" **Maybe** instance of previous example :
+To retrieve raw optionnal value from the "$some" **Maybe** instance of previous example :
 
 ```php
 echo $some->value(); // "my value"
 
 ```
 
-To return the result of a function using the Option value as parameter :
+Pass an optionnal value through a function an get the result :
 
 ```php
 
@@ -94,13 +139,11 @@ echo $some->apply(strtoupper(...)); // "MY VALUE"
 
 ```
 
-It is possible to add arguments, separated by comas.
-In this case, there are two restrictions :
+The **Option** value is always passed to the function as first parameter.
 
-- The Option value MUST be the first parameter of the function.
-- The order of the arguments must match with the other function parameters.
+It is possible to add arguments, separated by comas. The order of the arguments is important.
 
-Another example to illustrate those restrictions :
+Another example with some added arguments :
 
 ```php
 
@@ -112,8 +155,8 @@ echo $pathToAboutPage->apply($function, '/','page' ); //"about-page"
 
 ```
 
-The **Maybe** value is able to return a new instance of himself with the result of a function.
-The current instance value is passed to the given function :
+It is possible to get a new **Hypothetik** instance containing the result of a function.
+Once again, the **Option** value is always passed to the function as first parameter and arguments can be added :
 
 ```php
 $maybeThen = $some->then(strtoupper(...)); // retourne un nouveau Maybe contenant "MY VALUE"
@@ -130,32 +173,30 @@ echo $some->then(strtoupper(...)) // return a new Maybe containing "MY VALUE"
 
 ```
 
-Just like _apply()_ method, _then()_ can accept some other arguments.
-Those will be appended after the main value as parameters.
-
-### Falsy Maybe : null value
+### Invalid value : null value
 
 With a null value, things are slightly different.
 Both _apply()_ and _value()_ methods will return null again.
 The _then()_ method returns a Maybe with a null Option value.
 
-Let's take a look at the "$now" instance from the first example :
+Take a look at the "$not" instance from the first example :
 
 ```php
 echo $not->value(); // prints nothing because null
-echo $not->apply(strtoupper(...)); // null too
+echo $not->apply(strtoupper(...)); // null too, function is not applied
 echo $not->then(strtoupper(...))->value(); // still null
 
 ```
 
-**Maybe** provides a way to substitute a falsy instance to a truthy one by using _otherwise_ method :
+**Maybe** provides a way to substitute an "invalid" instance to a valid one by using _otherwise_ method :
 
 ```php
 
 $otherwise = $not->otherwise('nothing');
 echo $otherwise->value(); // prints "nothing"
 echo $otherwise->apply(strtoupper(...)); // prints "NOTHING"
-echo $otherwise->then(strtoupper(...))->value(); // "NOTHING" again.
+echo $otherwise->then(strtoupper(...)) // // Maybe<'NOTHING'>
+               ->value(); // "NOTHING" again.
 
 ```
 
@@ -203,7 +244,7 @@ echo $not->either(toUpperCase(...))
 
 ```
 
-And to retrieve a new instance of **Maybe** with **Either** function result :
+And to retrieve a new **Hypothetik** instance from **Either** :
 
 ```php
 
@@ -223,13 +264,65 @@ echo $not->either(toUpperCase(...)) // won't run this function
 
 ```
 
+## Boolean value :
+
+An hypothetik boolean value works a different way.
+It always holds an **Option** with a boolean value where false is the invalid one.
+The **Hypothetik** interface ensures a fully substitutionnable instance,
+providing the hability to chain methods from a **Maybe** to a **When** or reverse.
+
+Here's a simple example :
+
+```php
+$phrase = 'this is just a test';
+
+$when = Maybe::some(str_contains($phrase, 'just')); // truthy When
+echo $when->value() ? 'valid' : 'invalid'; // 'valid'
+$whenNot = Maybe::some(str_contains($phrase, 'only')); // falsy When
+echo $whenNot->value() ? 'valid' : 'invalid'; // 'invalid'
+
+```
+**When** class has its own static factory method :
+
+```php
+$when = When::ever(true); // or false...
+
+```
+
+Methods _apply()_ and _then_ won't use the boolean value as first function parameter, this time.
+Additionnal rguments are allowed, separated by comas, just like **Maybe**.
+
+Combining **Maybe** and **When** instance calls :
+
+```php
+$truthyWhen = Maybe::some('/about') // instance of Maybe</about>
+    ->then(fn (string $value) => str_starts_with($value, '/')) // instance of When<false>
+    ->either(fn() => 'truthy result') // will be executed
+    ->or(fn() => 'falsy result') // won't be executed
+    ->try(); // Maybe<'truthy result'>
+echo $when->value(); // 'truthy result'
+
+$falsyWhen = Maybe::some('/about') // instance of Maybe</about>
+    ->then(fn (string $value) => trim($value, '/')) // instance of Maybe<about>
+    ->then(fn (string $value) => str_starts_with($value, '/')) // instance of When<false>
+    ->either(fn() => 'truthy result') // won't be executed
+    ->or(fn() => 'falsy result') // will be executed
+    ->value(); // raw value
+echo $when; // 'falsy result'
+
+```
+
 ## Notes
 
-Test Driven Development
-
-No dependency injection. User has to provide required instances.
+No dependency injection. User has to provide required instances if needed.
+A **Maybe** cannot carry another **Hypothetik**, an **Option** cannot carry another **Option**. Trying to do so will return the given instance as is.
 
 ## Issues
 
-I'm still not able to use Php Documentation in order to provide autocompletion with any IDE.
-Problems on generic type handling.
+I'm still not able to use Php Documentation properly in order to provide autocompletion from any IDE.
+Problems on generic types handling.
+
+I still don't need any **Hypothetik** container to handle multiple **Hypothetik** instances.
+I'll think about this kind of implementation only if necessary...
+
+Maybe some tests are still missing. I'm not sure to cover all possible use cases.

@@ -16,6 +16,7 @@ namespace Ascetik\Hypothetik\Core;
 
 use Ascetik\Callapsule\Factories\CallWrapper;
 use Ascetik\Callapsule\Types\CallableType;
+use Ascetik\Hypothetik\Types\Hypothetik;
 
 /**
  * Provide the ability to run a function
@@ -28,7 +29,7 @@ final class Either
     private readonly array $arguments;
 
     private function __construct(
-        private readonly Maybe $maybe,
+        private readonly Hypothetik $maybe,
         private readonly CallableType $call,
         mixed ...$arguments
     ) {
@@ -37,13 +38,13 @@ final class Either
 
     public function or(callable $function, mixed ...$arguments): self
     {
-        if ($this->maybe->isNull()) {
-            return self::use($this->maybe, $function, ...$arguments);
+        if (!$this->maybe->isValid()) {
+            return self::useContext($this->maybe, $function, ...$arguments);
         }
         return $this;
     }
 
-    public function try(): Maybe
+    public function try(): Hypothetik
     {
         return Maybe::some($this->value());
     }
@@ -53,9 +54,8 @@ final class Either
         return $this->call->apply($this->arguments);
     }
 
-    public static function use(Maybe $maybe, callable $call, mixed ...$arguments): self
+    public static function useContext(Hypothetik $maybe, callable $call, mixed ...$arguments): self
     {
-
         return new self($maybe, CallWrapper::wrap($call), ...$arguments);
     }
 }

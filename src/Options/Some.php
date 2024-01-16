@@ -44,6 +44,10 @@ final class Some implements Option
         return $this->value === $option->value;
     }
 
+    public function isValid(): bool
+    {
+        return true;
+    }
     /**
      * @template Generic
      *
@@ -63,8 +67,8 @@ final class Some implements Option
     public static function of(mixed $value): Option
     {
         return match (true) {
-            is_null($value) => new None(),
             $value instanceof Option => $value,
+            is_null($value) => new None(),
             default => new self($value)
         };
     }
