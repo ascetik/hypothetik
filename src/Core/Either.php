@@ -44,7 +44,7 @@ final class Either
         return $this;
     }
 
-    public function try(): Maybe
+    public function try(): Hypothetik
     {
         return Maybe::some($this->value());
     }
@@ -56,7 +56,6 @@ final class Either
 
     public static function useContext(Hypothetik $maybe, callable $call, mixed ...$arguments): self
     {
-
         return new self($maybe, CallWrapper::wrap($call), ...$arguments);
     }
 }

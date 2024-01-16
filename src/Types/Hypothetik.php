@@ -22,13 +22,10 @@ use Ascetik\Hypothetik\Core\Either;
  *
  * @version 1.0.0
  */
-interface Hypothetik
+interface Hypothetik extends OptionnalValue
 {
     public function apply(callable $function, mixed ...$arguments): mixed;
     public function either(callable $function, mixed ...$arguments): Either;
     public function then(callable $function, mixed ...$arguments): self;
-    public function isValid(): bool;
     public function otherwise(mixed $value): self;
-    public function value(): mixed;
-
 }
