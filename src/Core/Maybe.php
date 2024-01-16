@@ -64,7 +64,8 @@ final class Maybe implements Hypothetik
 
     public function isValid(): bool
     {
-        return !is_null($this->value());
+        return $this->option->isValid();
+        // return !is_null($this->value());
     }
 
     /**

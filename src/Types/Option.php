@@ -23,5 +23,6 @@ interface Option
 {
     public function apply(callable $function, array $arguments = []): mixed;
     public function equals(self $option): bool;
+    public function isValid(): bool;
     public function value(): mixed;
 }

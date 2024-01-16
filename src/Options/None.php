@@ -28,6 +28,11 @@ final class None implements Option
         return null;
     }
 
+    public function isValid(): bool
+    {
+        return false;
+    }
+
     public function value(): null
     {
         return null;
