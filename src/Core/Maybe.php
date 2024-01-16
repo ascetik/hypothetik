@@ -121,7 +121,7 @@ final class Maybe implements Hypothetik
      */
     public static function some(mixed $value): Hypothetik
     {
-        if ($value instanceof self) {
+        if ($value instanceof Hypothetik) {
             return $value;
         }
         if (is_bool($value)) {
