@@ -57,7 +57,7 @@ final class Maybe implements Hypothetik
         return Either::useContext($this, $function, ...[$this->value(), ...$arguments]);
     }
 
-    public function equals(self $value): bool
+    public function equals(Hypothetik $value): bool
     {
         return $this->option->equals($value->option);
     }
@@ -65,7 +65,6 @@ final class Maybe implements Hypothetik
     public function isValid(): bool
     {
         return $this->option->isValid();
-        // return !is_null($this->value());
     }
 
     /**
