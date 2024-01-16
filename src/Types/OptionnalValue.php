@@ -15,12 +15,13 @@ declare(strict_types=1);
 namespace Ascetik\Hypothetik\Types;
 
 /**
- * Describe the behavior of a Maybe Option
+ * Provide value validity check
+ * and raw value output
  *
  * @version 1.0.0
  */
-interface Option extends OptionnalValue
+interface OptionnalValue
 {
-    public function apply(callable $function, array $arguments = []): mixed;
-    public function equals(self $option): bool;
+    public function isValid(): bool;
+    public function value(): mixed;
 }
