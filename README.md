@@ -6,9 +6,13 @@ Home made OOP "Monad", for an easier management of predictible null values.
 
 ## Release notes
 
-> V 0.2.0 : still a draft version.
+> Version 0.3.0 : still a draft version.
 
 Php version : 8.2.14
+
+1. New **Hypothetik** interface, describing the behavior of a monad included in this package.
+2. **Maybe** class implements **Hypothetik** interface as well.
+3. New **When**, **Hypothetik** implementation to handle booleans.
 
 ## Desciptions
 
@@ -75,9 +79,17 @@ $any = Maybe::of(new MyOwnStringOption('any string value')); // Maybe<string>
 $anyobj = Maybe::of(new MyOwnOption(new MyOwnInstance())); // Maybe<MyOwnInstance>
 $anyNullObj = Maybe::of(new MyOwnNullOption()); // Maybe<null>
 
+// Until version 0.3.0
+$truthy = Maybe::some(true); // this is a "When" instance
+$falsy = Maybe::some(false); // this is a "When" instance too
+
 ```
 
-### Truthy Maybe : mixed value not null
+The version 0.3.0 provides a new **When** class to use with booleans.
+As **Maybe** is invalid with a null value, a **When** instance is invalid when its value is _false_.
+More descriptions below...
+
+### Valid value : mixed value not null
 
 To retrieve the value from the "$some" **Maybe** instance of previous example :
 
@@ -133,7 +145,7 @@ echo $some->then(strtoupper(...)) // return a new Maybe containing "MY VALUE"
 Just like _apply()_ method, _then()_ can accept some other arguments.
 Those will be appended after the main value as parameters.
 
-### Falsy Maybe : null value
+### Invalid value : null value
 
 With a null value, things are slightly different.
 Both _apply()_ and _value()_ methods will return null again.
@@ -223,13 +235,62 @@ echo $not->either(toUpperCase(...)) // won't run this function
 
 ```
 
+## Boolean value : When<bool>
+
+There are nothing special to say but the fact that it handles boolean values.
+Every methods work the same way. The main difference is that now, a boolean value
+as methods to execute a task weither it is set to true or not.
+
+Here's a simple example :
+
+```php
+$phrase = 'this is just a test';
+
+$when = Maybe::some(str_contains($phrase, 'just'));
+echo $when->value() ? 'valid' : 'invalid'; // 'valid'
+$whenNot = Maybe::some(str_contains($phrase, 'only'));
+echo $whenNot->value() ? 'valid' : 'invalid'; // 'invalid'
+
+```
+
+**When** class has its own static factory method :
+
+```php
+$when = When::ever(true); // or false...
+
+```
+
+It's possible to combine **Maybe** and **When** instance calls :
+
+```php
+$truthyWhen = Maybe::some('/about') // instance of Maybe</about>
+    ->then(fn (string $value) => str_starts_with($value, '/')) // instance of When<false>
+    ->either(fn() => 'truthy result') // will be executed
+    ->or(fn() => 'falsy result') // won't be executed
+    ->try(); // Maybe<'truthy result'>
+echo $when->value(); // 'truthy result'
+
+$falsyWhen = Maybe::some('/about') // instance of Maybe</about>
+    ->then(fn (string $value) => trim($value, '/')) // instance of Maybe<about>
+    ->then(fn (string $value) => str_starts_with($value, '/')) // instance of When<false>
+    ->either(fn() => 'truthy result') // won't be executed
+    ->or(fn() => 'falsy result') // will be executed
+    ->value(); // raw value
+echo $when; // 'falsy result'
+
+```
+
 ## Notes
 
-Test Driven Development
-
 No dependency injection. User has to provide required instances.
+A **Maybe** cannot carry another **Hypothetik**, an **Option** cannot carry another **Option**. Trying to do so will return the given instance as is.
 
 ## Issues
 
 I'm still not able to use Php Documentation in order to provide autocompletion with any IDE.
 Problems on generic type handling.
+
+I still don't need any **Hypothetik** container to handle multiple **Hypothetik** instances.
+I'll think about this kind of implementation only if necessary...
+
+Maybe some tests are still missing. I'm not sure to cover all possible use cases.

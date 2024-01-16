@@ -73,7 +73,7 @@ final class Maybe implements Hypothetik
      */
     public function otherwise(mixed $value): self
     {
-        return is_null($this->value())
+        return !$this->isValid()
             ? self::some($value)
             : $this;
     }
@@ -91,7 +91,7 @@ final class Maybe implements Hypothetik
      * @template Generic
      * @param Generic $value
      *
-     * @return Maybe<Generic>
+     * @return Hypothetik<Generic>
      */
     public function then(callable $function, mixed ...$arguments): Hypothetik
     {
@@ -117,16 +117,14 @@ final class Maybe implements Hypothetik
      * @template Generic
      * @param Generic $value
      *
-     * @return Maybe<Generic|null>
+     * @return Hypothetik<Generic>
      */
     public static function some(mixed $value): Hypothetik
     {
-        if ($value instanceof self) {
-            return $value;
-        }
-        if (is_bool($value)) {
-            return When::as($value);
-        }
-        return self::of(Some::of($value));
+        return match (true) {
+            $value instanceof Hypothetik => $value,
+            is_bool($value) => When::ever($value),
+            default => self::of(Some::of($value))
+        };
     }
 }

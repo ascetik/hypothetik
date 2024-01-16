@@ -48,4 +48,11 @@ class ConditionFromMaybeTest extends TestCase
             ->or(fn() => 'falsy result');
         $this->assertSame('falsy result', $either->value());
     }
+
+    public function testMaybeCannotContainAWhen()
+    {
+        $when = When::ever(true);
+        $maybe = Maybe::some($when);
+        $this->assertSame($when,$maybe);
+    }
 }

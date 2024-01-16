@@ -24,18 +24,26 @@ use Ascetik\Hypothetik\Types\Hypothetik;
  * boolean value in a fluent way
  * to limit "if" expressions usage
  *
+ * @template Boolean of bool
  * @version 1.0.0
  */
 class When implements Hypothetik
 {
     /**
-     * @param Some<bool> $bool
+     * @template Boolean of bool
+     * @param Some<Boolean> $bool
      */
     private function __construct(private Some $bool)
     {
     }
 
-    public static function as(bool $bool): self
+    /**
+     * @template Boolean of bool
+     * @param Boolean $bool
+     *
+     * @return self<Boolean>
+     */
+    public static function ever(bool $bool): self
     {
         return new self(Some::of($bool));
     }
